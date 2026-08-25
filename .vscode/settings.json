@@ -1,0 +1,14 @@
+{
+  // Python 테스트를 편집기의 Testing 패널에서 바로 돌릴 수 있게 한다.
+  "python.testing.unittestEnabled": true,
+  "python.testing.pytestEnabled": false,
+  "python.testing.unittestArgs": ["-v", "-s", "tests", "-p", "test_*.py"],
+
+  // src/를 import 경로에 넣어 tests가 sort를 찾을 수 있게 한다.
+  "python.analysis.extraPaths": ["src"],
+
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "[c]": { "editor.tabSize": 4 },
+  "[python]": { "editor.tabSize": 4 }
+}
