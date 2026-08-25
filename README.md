@@ -43,39 +43,36 @@ docker compose exec lab bash
 
 ## 돌려보기
 
-컨테이너 안에서 `make` 한 단어면 됩니다.
+**파일을 열고 편집기 오른쪽 위 ▶ 버튼**을 누르면 됩니다. C든 Python이든
+그 파일이 실행됩니다.
 
-- 실행
-
-```sh
-make run
-```
-
-- 결과
+- 실행 (`src/topic-01-intro-search/01_sequential_search/sequentialSearch.c`)
 
 ```console
-sorted: 1 2 3 4 5 6 7 8 9 10
-sorted: 1 2 3 4 5 6 7 8 9 10
+n = 15, key = 51
+index = 6, comparisons = 7
 ```
 
-| 명령 | 하는 일 |
-| --- | --- |
-| `make run` | 예제 실행 (C · Python) |
-| `make test` | 유닛 테스트 (C · Python) |
-| `make debug` | 디버그 심볼을 넣어 빌드 |
-| `make clean` | 빌드 산출물 정리 |
-
-VS Code에서는 이렇게 돌립니다.
+Python 구현도 같은 결과를 냅니다.
 
 | 하고 싶은 것 | 방법 |
 | --- | --- |
 | 파일 하나 실행 | 편집기 오른쪽 위 **▶ 버튼** (Code Runner) |
-| 전체 실행 | `Cmd/Ctrl + Shift + B` |
-| 테스트 | 명령 팔레트 → **Tasks: Run Test Task** |
+| 파일 하나 빌드만 | `Cmd/Ctrl + Shift + B` |
 | 디버그 | `F5` → **C 디버그 (현재 파일)** |
 
-넷 다 `Makefile`을 거치므로 같은 폴더의 `.c`가 함께 빌드됩니다. Python은
+전부 `Makefile`을 거치므로 같은 폴더의 `.c`가 함께 빌드됩니다. Python은
 `python3`로 실행됩니다.
+
+터미널에서 직접 부를 수도 있습니다.
+
+```sh
+cd src/topic-01-intro-search/01_sequential_search
+make -f /work/Makefile sequentialSearch.out && ./sequentialSearch.out
+python3 sequential_search.py
+```
+
+`make clean`으로 빌드 산출물을 지웁니다.
 
 ## 내 코드를 남기고 싶다면
 
@@ -97,9 +94,17 @@ VS Code에서는 이렇게 돌립니다.
 algorithm-code/
 ├── .devcontainer/  .vscode/          # Codespaces · 빌드 · 디버그 설정
 ├── compose.yml  Dockerfile  Makefile
-├── src/  tests/                      # 환경 확인용 예제 (버블 정렬)
-└── topic-01-intro-search/            # 주제별 예제 (추가 예정)
+└── src/
+    └── topic-01-intro-search/
+        └── 01_sequential_search/
+            ├── README.md
+            ├── sequentialSearch.pseudo   # 기준이 되는 절차
+            ├── sequentialSearch.c        # C 구현
+            └── sequential_search.py      # Python 구현
 ```
+
+예제 하나가 폴더 하나입니다. 같은 폴더의 `.c`가 함께 빌드되므로 헤더를 나눠도
+되지만, **한 폴더에 `main`은 하나만** 둡니다.
 
 전체 주제 목록은 [강의 목록](https://lec-algorithm.github.io/lecture/course/)에
 있습니다.
