@@ -11,7 +11,8 @@
 CC ?= gcc
 CFLAGS ?= -std=c17 -Wall -Wextra -O2 -Isrc
 # 디버그 빌드: 최적화를 끄고 심볼을 남긴다 (VS Code의 F5가 이 결과물을 쓴다).
-DEBUGFLAGS ?= -std=c17 -Wall -Wextra -g -O0 -Isrc
+# `-I`는 아래 패턴 규칙이 대상 파일의 폴더로 붙인다. 여기서 고정하지 않는다.
+DEBUGFLAGS ?= -std=c17 -Wall -Wextra -g -O0
 
 .PHONY: all run run-c run-py test test-c test-py debug clean
 
@@ -38,8 +39,11 @@ debug: src/main.debug.out
 src/main.out: src/main.c src/sort.c src/sort.h
 	$(CC) $(CFLAGS) -o $@ src/main.c src/sort.c
 
-src/main.debug.out: src/main.c src/sort.c src/sort.h
-	$(CC) $(DEBUGFLAGS) -o $@ src/main.c src/sort.c
+# 파일 하나를 그 자리에서 디버그 빌드한다. VS Code의 "C 디버그 (현재 파일)"이
+# 이 규칙을 부른다. 같은 폴더의 .c를 함께 링크하므로 헤더에 선언만 있고 구현이
+# 옆 파일에 있어도 된다. 대신 **한 폴더에 main은 하나만** 둔다.
+%.debug.out: %.c
+	$(CC) $(DEBUGFLAGS) -I$(@D) -o $@ $(wildcard $(@D)/*.c)
 
 tests/test_sort.out: tests/test_sort.c src/sort.c src/sort.h
 	$(CC) $(CFLAGS) -o $@ tests/test_sort.c src/sort.c

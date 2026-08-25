@@ -32,6 +32,15 @@
       "presentation": { "reveal": "silent", "panel": "shared" }
     },
     {
+      // launch.json의 "C 디버그 (현재 파일)"이 부르는 작업.
+      // 열려 있는 .c 파일과 같은 폴더의 .c를 함께 빌드한다.
+      "label": "make debug (현재 파일)",
+      "type": "shell",
+      "command": "make ${relativeFileDirname}/${fileBasenameNoExtension}.debug.out",
+      "problemMatcher": ["$gcc"],
+      "presentation": { "reveal": "silent", "panel": "shared" }
+    },
+    {
       "label": "make clean",
       "type": "shell",
       "command": "make clean",
