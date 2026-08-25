@@ -13,19 +13,28 @@
   `lecture` 저장소다.
 - **설명을 길게 쓰지 않는다.** README는 "어떻게 돌리는가"까지만 담고,
   "왜 이렇게 되는가"는 강의 자료가 맡는다.
-- 환경 파일(`compose.yml`·`Dockerfile`·`Makefile`·`.devcontainer`·`.vscode`)은
-  `algorithm-env`에서 온 것이다. 고쳐야 할 일이 생기면 **`algorithm-env`를 먼저
-  고치고** 여기로 가져온다. 반대 방향으로 흐르게 두지 않는다.
+- 컨테이너 정의(`compose.yml`·`Dockerfile`·`.devcontainer`)와 실행 방식
+  (`.vscode/launch.json`·`settings.json`)은 `algorithm-env`가 단일 원본이다.
+  고쳐야 할 일이 생기면 **`algorithm-env`를 먼저 고치고** 여기로 가져온다.
+- 다만 `Makefile`과 `.vscode/tasks.json`은 두 저장소가 다르다. `algorithm-env`는
+  고정된 진입점(`src/main.c`)이 있어 `make run`·`make test`를 두지만, 여기는
+  없다. 패턴 규칙(`%.out`·`%.debug.out`)만 같게 유지한다.
 
 ## 구조와 규약
 
 ```plaintext
-src/    tests/                 환경 확인용 예제 (algorithm-env에서 온 버블 정렬)
-topic-NN-<슬러그>/             주제별 예제 (추가 예정)
+src/topic-NN-<슬러그>/<번호>_<예제>/
+    <algorithm>.pseudo · <algorithm>.c · <algorithm>.py · README.md
 ```
 
-주제 폴더 이름은 `lecture` 저장소의 주제 슬러그와 **글자 그대로 일치**한다.
-대응표는 `lecture` 저장소의 `docs/course-plan.md`에 있다.
+- 주제 폴더 이름은 `lecture` 저장소의 주제 슬러그와 **글자 그대로 일치**한다.
+  대응표는 `lecture` 저장소의 `docs/course-plan.md`에 있다.
+- **예제 하나가 폴더 하나다.** `Makefile`의 패턴 규칙이 같은 폴더의 `.c`를 함께
+  링크하므로, **한 폴더에 `main`은 하나만** 둔다. 두 개면 링크가 충돌한다.
+- 이 저장소에는 **고정된 진입점이 없다.** `make run` 같은 타겟을 두지 않는다.
+  실행은 열려 있는 파일을 대상으로 한다.
+- `algorithm-env`에서 온 버블 정렬 데모는 지웠다. 그쪽은 환경이 도는지 보여
+  주는 예제이고, 여기는 강의 예제만 담는다.
 
 - **외부 라이브러리를 쓰지 않는다.** C는 표준 라이브러리만, Python은 표준
   모듈만. C 테스트도 프레임워크 없이 직접 쓴다. 이미지에 무언가를 더 깔아야

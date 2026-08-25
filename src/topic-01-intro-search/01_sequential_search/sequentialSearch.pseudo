@@ -1,0 +1,15 @@
+ALGORITHM SequentialSearch(A, n, key)
+    INPUT   A: 원소 n개의 배열
+            key: 찾는 값
+    OUTPUT  key가 있는 인덱스. 없으면 -1
+
+    for i <- 0 to n-1 do
+        comparisons <- comparisons + 1
+        if A[i] = key then
+            return i
+    return -1
+
+// 비교 횟수
+//   최선  1        (첫 원소가 key)
+//   평균  (n+1)/2
+//   최악  n        (마지막 원소이거나 없음)
