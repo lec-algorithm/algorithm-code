@@ -1,4 +1,8 @@
 {
+  // 편집기 오른쪽 위의 ▶ 버튼을 끈다. 그 버튼은 "활성 파일 빌드"로 파일 하나만
+  // 컴파일해 링크가 실패한다. F5의 구성 목록에서도 그 항목이 사라진다.
+  "C_Cpp.debugShortcut": false,
+
   // Python 테스트를 편집기의 Testing 패널에서 바로 돌릴 수 있게 한다.
   "python.testing.unittestEnabled": true,
   "python.testing.pytestEnabled": false,
