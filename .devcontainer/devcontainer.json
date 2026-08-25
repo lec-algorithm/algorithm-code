@@ -18,14 +18,13 @@
     "vscode": {
       "extensions": [
         "ms-vscode.cpptools",
-        "ms-python.python"
+        "ms-python.python",
+        "ms-python.debugpy"
       ],
+      // 편집기 설정은 .vscode/settings.json이 단일 원본이다. 두 곳에 두면
+      // 갈라지므로 여기에는 컨테이너에서만 의미가 있는 것만 남긴다.
       "settings": {
-        "terminal.integrated.defaultProfile.linux": "bash",
-        "files.insertFinalNewline": true,
-        "files.trimTrailingWhitespace": true,
-        "[c]": { "editor.tabSize": 4 },
-        "[python]": { "editor.tabSize": 4 }
+        "terminal.integrated.defaultProfile.linux": "bash"
       }
     }
   },
