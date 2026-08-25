@@ -11,5 +11,5 @@
 
 - 저장소 생성. [algorithm-env](https://github.com/lec-algorithm/algorithm-env)
   v1.0.0 template에서 만들었다.
-- 실습 환경을 `algorithm-env` v1.0.1에 맞췄다. VS Code의 빌드·디버그 설정
-  (`.vscode/`)과 `make debug` 타겟이 들어왔다.
+- 실습 환경을 `algorithm-env` v1.0.2에 맞췄다. VS Code의 빌드·디버그 설정
+  (`.vscode/`), `make debug` 타겟, 파일 하나만 디버그하는 구성이 들어왔다.
