@@ -1,0 +1,29 @@
+ALGORITHM BinarySearch(A, n, key)
+    INPUT   A: 오름차순으로 정렬된 원소 n개의 배열
+            key: 찾는 값
+    OUTPUT  key가 있는 인덱스. 없으면 -1
+
+    lo <- 0
+    hi <- n - 1
+
+    while lo <= hi do
+        mid <- lo + (hi - lo) / 2     // (lo + hi) / 2는 오버플로 위험
+        comparisons <- comparisons + 1
+
+        if A[mid] = key then
+            return mid
+        else if A[mid] < key then
+            lo <- mid + 1             // 오른쪽 절반만 남긴다
+        else
+            hi <- mid - 1             // 왼쪽 절반만 남긴다
+
+    return -1
+
+// 전제: 배열이 정렬되어 있어야 한다. 그렇지 않으면 답이 틀린다.
+//
+// 비교 횟수
+//   최선  1
+//   최악  floor(log2(n)) + 1
+//
+// 한 번 비교할 때마다 남은 범위가 절반이 된다.
+// n개에서 시작해 1개가 될 때까지 반으로 줄이므로 log2(n)번이다.
