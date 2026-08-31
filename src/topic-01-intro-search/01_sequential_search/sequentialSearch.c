@@ -18,7 +18,7 @@ int sequentialSearch(const int a[], int n, int key, int *comparisons) {
 }
 
 int main(void) {
-    int a[] = {6, 13, 14, 25, 33, 43, 51, 53, 64, 72, 84, 93, 95, 96, 97};
+    int a[] = {6, 13, 14, 25, 33, 43, 51, 53, 64, 72, 84, 93, 95, 96, 101};
     int n = sizeof(a) / sizeof(a[0]);
     int key = 51;
     int comparisons = 0;
