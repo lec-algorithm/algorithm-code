@@ -15,7 +15,7 @@ def sequential_search(a, key):
 
 
 if __name__ == "__main__":
-    a = [6, 13, 14, 25, 33, 43, 51, 53, 64, 72, 84, 93, 95, 96, 97]
+    a = [6, 13, 14, 25, 33, 43, 51, 53, 64, 72, 84, 93, 95, 96, 101]
     key = 51
 
     index, comparisons = sequential_search(a, key)
