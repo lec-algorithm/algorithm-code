@@ -1,0 +1,16 @@
+ALGORITHM BubbleSort(A, n)
+    INPUT   A: 원소 n개의 배열
+    OUTPUT  오름차순으로 정렬된 A
+
+    for i <- 0 to n-2 do
+        // 한 회전이 끝나면 가장 큰 원소가 맨 뒤에 도착한다
+        for j <- 0 to n-2-i do
+            comparisons <- comparisons + 1
+            if A[j] > A[j+1] then
+                swap A[j], A[j+1]    // 이동 3회 (temp 경유)
+
+// 비교 횟수
+//   최선 = 평균 = 최악 = (n-1) + (n-2) + … + 1 = n(n-1)/2
+//   이미 정렬되어 있어도 전부 비교한다
+// 이동 횟수
+//   최선 0 (교환이 한 번도 없다), 최악 3 n(n-1)/2 (역순)
