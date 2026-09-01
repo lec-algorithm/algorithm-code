@@ -1,0 +1,18 @@
+ALGORITHM SelectionSort(A, n)
+    INPUT   A: 원소 n개의 배열
+    OUTPUT  오름차순으로 정렬된 A
+
+    for i <- 0 to n-2 do
+        min <- i
+        for j <- i+1 to n-1 do
+            comparisons <- comparisons + 1
+            if A[j] < A[min] then
+                min <- j
+        if min != i then
+            swap A[i], A[min]        // 이동 3회 (temp 경유)
+
+// 비교 횟수
+//   최선 = 평균 = 최악 = (n-1) + (n-2) + … + 1 = n(n-1)/2
+//   입력이 이미 정렬되어 있어도 전부 비교한다
+// 이동 횟수
+//   교환은 회전마다 많아야 1번. 최대 3(n-1)
