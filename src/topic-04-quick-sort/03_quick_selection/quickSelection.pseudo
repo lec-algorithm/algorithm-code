@@ -1,0 +1,17 @@
+ALGORITHM QuickSelection(A, n, k)
+    INPUT   A: 배열, k: 몇 번째로 작은 값인가 (1부터)
+    OUTPUT  k번째로 작은 값
+
+    lo <- 0, hi <- n-1
+    loop
+        p <- Partition(A, lo, hi)    // 퀵 정렬과 같은 파티션
+        if p = k-1 then              // 피벗이 정확히 k번째 자리
+            return A[p]
+        else if p > k-1 then
+            hi <- p-1                // 답은 왼쪽에. 오른쪽은 버린다
+        else
+            lo <- p+1                // 답은 오른쪽에. 왼쪽은 버린다
+
+// 퀵 정렬과 파티션이 같다. 다른 점은 한쪽만 판다는 것뿐이다.
+// 평균 비교: n + n/2 + n/4 + ... = 2n, 그래서 O(n)
+// 배열 전체를 정렬하지 않고 답을 얻는다. 끝난 배열은 미완성 정렬이다
