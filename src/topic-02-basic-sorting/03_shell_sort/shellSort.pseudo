@@ -1,0 +1,20 @@
+ALGORITHM ShellSort(A, n)
+    INPUT   A: 원소 n개의 배열
+    OUTPUT  오름차순으로 정렬된 A
+
+    gap <- n / 2
+    while gap >= 1 do
+        // gap 간격으로 떨어진 원소들끼리 삽입 정렬
+        for i <- gap to n-1 do
+            key <- A[i]              // 이동 1회
+            j <- i - gap
+            while j >= 0 and A[j] > key do   // A[j] > key 평가마다 비교 1회
+                A[j+gap] <- A[j]     // 이동 1회 (gap칸 밀기)
+                j <- j - gap
+            A[j+gap] <- key          // 이동 1회
+        gap <- gap / 2
+
+// 마지막 회전은 gap = 1, 즉 보통의 삽입 정렬이다.
+// 앞 회전들이 원소를 성큼성큼 옮겨 두므로 마지막 회전은 거의 밀 것이 없다.
+// 비교 횟수: gap 수열에 따라 다르다. 절반씩 줄이면 최악 O(n^2),
+//   Knuth 수열(1, 4, 13, 40, …)이면 O(n^1.5)
