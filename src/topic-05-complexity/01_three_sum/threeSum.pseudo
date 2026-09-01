@@ -1,0 +1,25 @@
+ALGORITHM TwoSum(A, n)
+    INPUT   A: 정수 n개의 배열
+    OUTPUT  합이 0이 되는 쌍의 개수
+
+    count <- 0
+    for i <- 0 to n-1 do
+        for j <- i+1 to n-1 do
+            if A[i] + A[j] = 0 then   // 배열 접근 2회
+                count <- count + 1
+    return count
+
+ALGORITHM ThreeSum(A, n)
+    count <- 0
+    for i <- 0 to n-1 do
+        for j <- i+1 to n-1 do
+            for k <- j+1 to n-1 do
+                if A[i] + A[j] + A[k] = 0 then   // 배열 접근 3회
+                    count <- count + 1
+    return count
+
+// 연산을 전부 세는 대신 대표 연산(배열 접근) 하나만 센다: 비용 모델
+//   1-sum: n            (선형)
+//   2-sum: n(n-1)       = 2 C(n,2). n을 두 배로 하면 약 4배
+//   3-sum: 3 C(n,3)     = n(n-1)(n-2)/2. 두 배로 하면 약 8배
+// n을 두 배로 했을 때 몇 배가 되는가(배가 실험)가 차수를 알려준다
