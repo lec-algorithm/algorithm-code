@@ -1,0 +1,36 @@
+ALGORITHM LZWEncode(text)
+    INPUT   text: 문자열
+    OUTPUT  코드의 목록
+
+    table <- 단일 문자 256개 (코드 0~255는 ASCII)
+    P <- text의 첫 문자
+    for 다음 문자 C in text do
+        if P + C가 table에 있으면 then
+            P <- P + C                      // 아는 문자열이면 더 길게 이어 간다
+        else
+            P의 코드를 내보낸다
+            table에 P + C를 추가한다        // 다음 코드 256, 257, ...
+            P <- C
+    P의 코드를 내보낸다
+
+ALGORITHM LZWDecode(codes)
+    INPUT   codes: 코드의 목록
+    OUTPUT  원래 문자열
+
+    table <- 단일 문자 256개
+    OLD <- 첫 코드
+    OLD의 번역을 내보낸다
+    C <- OLD의 번역의 첫 글자
+    for 다음 코드 NEW in codes do
+        if NEW가 table에 없으면 then        // 인코더가 방금 만든 코드
+            S <- OLD의 번역 + C
+        else
+            S <- NEW의 번역
+        S를 내보낸다
+        C <- S의 첫 글자
+        table에 OLD의 번역 + C를 추가한다  // 인코더와 같은 순서로 표를 만든다
+        OLD <- NEW
+
+// 표를 보내지 않는다. 디코더가 코드를 읽으며 인코더와 똑같은 표를 스스로 만든다.
+// 디코더는 인코더보다 한 걸음 늦게 표를 채운다. 그래서 인코더가 막 추가한
+// 코드가 바로 오면 아직 표에 없다. 그때 그 문자열은 OLD + (OLD의 첫 글자)뿐이다.

@@ -1,0 +1,33 @@
+ALGORITHM Huffman(freq)
+    INPUT   freq: 문자마다 나온 횟수
+    OUTPUT  허프만 트리 (왼쪽 가지 0, 오른쪽 가지 1)
+
+    forest <- 문자마다 잎 노드 하나, 가중치는 freq[문자]
+    while forest에 트리가 둘 이상 남아 있는 동안 do
+        x <- forest에서 가중치가 가장 작은 트리를 꺼낸다
+        y <- forest에서 가중치가 가장 작은 트리를 꺼낸다
+        z <- 새 노드, z.left <- x, z.right <- y     // 작은 쪽이 왼쪽(0)
+        z.weight <- x.weight + y.weight
+        forest에 z를 넣는다
+    return forest에 남은 트리 하나
+
+ALGORITHM Encode(text, codes)
+    bits <- 빈 비트열
+    for 문자 ch in text do
+        bits <- bits + codes[ch]       // 루트에서 잎 ch까지의 경로
+    return bits
+
+ALGORITHM Decode(bits, root)
+    node <- root
+    for 비트 b in bits do
+        node <- (b = 0이면 node.left, 아니면 node.right)
+        if node가 잎이면 then
+            node의 문자를 내보낸다
+            node <- root               // 접두사가 없으니 잎에서 바로 끊는다
+
+// 그리디 선택: 언제나 가장 드문 두 트리부터 합친다. 드문 문자일수록 깊이
+// 내려가 긴 코드를, 흔한 문자일수록 짧은 코드를 받는다.
+// 가중치가 같으면 트리 안의 가장 작은 문자(ASCII 순)로 순서를 정한다.
+// 이 규칙을 두 구현이 똑같이 따라야 같은 코드가 나온다.
+// 두 최솟값을 매번 훑어서 찾으면 문자 k종에 O(k^2), 우선순위 큐(힙)를 쓰면
+// O(k log k)
