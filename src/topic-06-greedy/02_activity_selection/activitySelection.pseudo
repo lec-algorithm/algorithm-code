@@ -1,0 +1,16 @@
+ALGORITHM ActivitySelection(A, n)
+    INPUT   A: 활동 n개, 각 활동은 (시작 시각, 끝 시각)
+    OUTPUT  서로 겹치지 않게 고른 활동들
+
+    A를 끝 시각 오름차순으로 정렬
+    selected <- [A[0]]                  // 가장 일찍 끝나는 활동부터
+    lastEnd <- A[0].end
+    for i <- 1 to n-1 do
+        if A[i].start >= lastEnd then   // 앞 활동이 끝난 뒤에 시작하면
+            selected에 A[i] 추가
+            lastEnd <- A[i].end
+    return selected
+
+// 그리디 선택: 언제나 가장 일찍 끝나는 활동을 고른다.
+// 일찍 끝날수록 남은 시간이 많이 남는다. 한 번 고른 활동은 되돌리지 않는다.
+// 정렬 O(n log n) + 한 번 훑기 O(n) = O(n log n)
