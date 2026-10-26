@@ -1,0 +1,34 @@
+ALGORITHM BuildProfile(F, r, n, g)
+    INPUT   F: 아이템 n개 × 특성 g개 (장르면 1, 아니면 0)
+            r: 사용자가 준 평점 n칸 (0은 아직 안 본 것)
+    OUTPUT  사용자 프로필: 특성마다 얼마나 좋아하는지
+
+    profile <- 0이 g개
+    for i <- 0 to n-1 do
+        if r[i] > 0 then
+            w <- r[i] - 3                   // 3점은 보통, 높으면 +, 낮으면 -
+            for t <- 0 to g-1 do
+                profile[t] <- profile[t] + w * F[i][t]
+    return profile
+
+ALGORITHM RankByContent(F, r, n, g, profile)
+    OUTPUT  안 본 아이템을 프로필과의 코사인 유사도 내림차순으로 줄 세운 목록
+
+    candidates <- []
+    for i <- 0 to n-1 do
+        if r[i] = 0 then                    // 안 본 아이템만 (새 아이템도 포함)
+            score[i] <- CosineSimilarity(profile, F[i], g)
+            candidates에 i 추가
+    candidates를 score 내림차순으로 정렬   // 같으면 번호가 작은 쪽이 먼저
+    return candidates
+
+ALGORITHM HybridScore(cf, content, alpha)
+    INPUT   cf: 협업 필터링 점수 (0~1, 없으면 "없음"), content: 콘텐츠 점수 (0~1)
+    OUTPUT  두 점수를 가중치 alpha로 섞은 점수
+
+    if cf가 없음 then return content        // 아무도 평가하지 않은 새 아이템
+    return alpha * cf + (1 - alpha) * content
+
+// 아이템 n개, 특성 g개일 때
+// 프로필 만들기 O(ng),  안 본 아이템 점수 매기기 O(ng),  줄 세우기 O(n log n)
+// 다른 사용자의 평점은 전혀 쓰지 않는다. 그래서 새 아이템도 점수를 받는다.
