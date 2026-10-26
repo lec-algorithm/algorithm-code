@@ -1,0 +1,30 @@
+ALGORITHM Accept(input)
+    INPUT   input: 문자열
+    OUTPUT  input 전체가 패턴 ab*c에 맞으면 true
+
+    // 상태
+    //   S0: 시작 상태
+    //   S1: 'a'를 읽은 상태
+    //   S2: b* 시작 상태 (0개의 'b' 허용)
+    //   S3: 'b'를 1개 이상 읽은 상태
+    //   S4: 'c'를 읽어서 패턴 매칭 완료 (수락 상태)
+    //
+    // 전이
+    //   S0 --'a'--> S1 --ε--> S2
+    //   S2 --'b'--> S3,  S3 --'b'--> S3
+    //   S2 --'c'--> S4,  S3 --'c'--> S4
+
+    state <- S0
+    for 입력 문자 ch in input do
+        if state = S0 and ch = 'a' then
+            state <- S1
+            state <- S2                     // ε 전이: 입력 없이 바로 S2로
+        else if state ∈ {S2, S3} and ch = 'b' then
+            state <- S3
+        else if state ∈ {S2, S3} and ch = 'c' then
+            state <- S4
+        else
+            return false                    // 갈 곳이 없으면 거부
+    return state = S4                       // 끝났을 때 수락 상태여야 수락
+
+// 문자 하나에 전이 하나. 되돌아가는 일이 없으므로 입력 길이 N에 대해 O(N)이다.
