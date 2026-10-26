@@ -41,8 +41,8 @@ double cosineSimilarity(const double a[], const double b[], int n) {
 
 /* 본 영화마다 (평점 - 3)만큼 그 영화의 장르를 더한다.
  * 3점은 보통이라 0, 높게 준 영화의 장르는 +, 낮게 준 영화의 장르는 -가 된다. */
-void buildProfile(const double features[][GENRES], const int ratings[], int n,
-                  int g, double profile[]) {
+void buildProfile(const double features[][GENRES], const int ratings[],
+                  int n, int g, double profile[]) {
     for (int t = 0; t < g; t++) {
         profile[t] = 0.0;
     }
