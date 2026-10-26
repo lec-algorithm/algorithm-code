@@ -1,6 +1,6 @@
 /* 콘텐츠 기반 필터링 — 아이템의 특성(장르)과 사용자 프로필을 비교한다.
  *
- * 1) 슬라이드의 예: 장르 벡터와 "액션·코미디를 좋아함" 벡터의 코사인 유사도
+ * 1) 작은 예: 장르 벡터와 "액션·코미디를 좋아함" 벡터의 코사인 유사도
  * 2) 사용자 A의 평점으로 프로필을 만들고, 안 본 영화를 코사인 유사도로 줄 세운다.
  *    아무도 평가하지 않은 새 영화(M7)도 장르만 있으면 점수를 받는다.
  * 3) 하이브리드: 협업 필터링 점수와 콘텐츠 점수를 가중치로 섞는다.
@@ -85,11 +85,11 @@ double hybridScore(double cf, double content, double alpha) {
     return alpha * cf + (1.0 - alpha) * content;
 }
 
-/* 1) 슬라이드의 예: 장르 (액션, 코미디, 드라마) */
+/* 1) 작은 예: 장르 (액션, 코미디, 드라마) */
 static void slideExample(void) {
     const double movies[3][GENRES] = {{1, 0, 0}, {1, 1, 0}, {0, 0, 1}};
     const double likes[GENRES] = {1, 1, 0};
-    printf("slides: genres (action, comedy, drama), user likes (1 1 0)\n");
+    printf("toy: genres (action, comedy, drama), user likes (1 1 0)\n");
     for (int i = 0; i < 3; i++) {
         printf("  movie %d (%.0f %.0f %.0f)  %.3f\n", i + 1, movies[i][0],
                movies[i][1], movies[i][2], cosineSimilarity(likes, movies[i], 3));
@@ -139,12 +139,12 @@ int main(void) {
         printf("  %d. M%d  %.3f\n", i + 1, order[i] + 1, score[order[i]]);
     }
 
-    /* 3) 하이브리드. 슬라이드의 점수를 반반 섞는다. */
+    /* 3) 하이브리드. 작은 예의 점수를 반반 섞는다. */
     const double alpha = 0.5;
     const double slideCf[3] = {0.8, 0.7, 0.3};
     const double slideContent[3] = {0.6, 0.9, 0.4};
     printf("\nhybrid = %.1f * collaborative + %.1f * content\n", alpha, 1.0 - alpha);
-    printf("  slides:");
+    printf("  toy:");
     for (int i = 0; i < 3; i++) {
         printf(" %.3f", hybridScore(slideCf[i], slideContent[i], alpha));
     }

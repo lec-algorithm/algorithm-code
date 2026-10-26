@@ -1,6 +1,6 @@
 """협업 필터링 — 평점 행렬만 보고 빈칸을 예측한다.
 
-1) 슬라이드의 4x4 행렬로 사용자끼리 코사인 유사도를 잰다.
+1) 작은 4x4 행렬로 사용자끼리 코사인 유사도를 잰다.
 2) 사용자 기반: 대상 사용자와 비슷한 이웃을 골라 그들의 평점을
    유사도로 가중 평균한다. 코사인과 피어슨 상관을 나란히 본다.
 3) 아이템 기반: 빈칸의 아이템과 비슷한 아이템(대상 사용자가 이미 본 것)을
@@ -22,7 +22,7 @@ def square_root(x):
 
 
 def cosine_similarity(a, b):
-    """두 평점 벡터 사이 각도의 코사인. 안 본 칸(0)도 0으로 그대로 넣는다(슬라이드와 같다)."""
+    """두 평점 벡터 사이 각도의 코사인. 안 본 칸(0)도 0으로 그대로 넣는다."""
     dot = na = nb = 0.0
     for x, y in zip(a, b):
         dot += x * y
@@ -99,14 +99,14 @@ def predict_item_based(ratings, target, item, k):
 
 
 def slide_example():
-    """1) 슬라이드의 행렬: 사용자 A~D, 아이템 1~4"""
+    """1) 작은 행렬: 사용자 A~D, 아이템 1~4"""
     r = [
         [5, 3, 0, 0],
         [4, 0, 0, 0],
         [0, 0, 5, 4],
         [0, 0, 4, 0],
     ]
-    print("slides: users A-D, items 1-4 (0 = not rated)")
+    print("toy: users A-D, items 1-4 (0 = not rated)")
     print("cosine        A      B      C      D")
     for u in range(4):
         cells = "".join(f" {cosine_similarity(r[u], r[v]):6.3f}" for v in range(4))

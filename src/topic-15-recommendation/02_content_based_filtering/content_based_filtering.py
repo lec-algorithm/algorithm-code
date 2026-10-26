@@ -1,6 +1,6 @@
 """콘텐츠 기반 필터링 — 아이템의 특성(장르)과 사용자 프로필을 비교한다.
 
-1) 슬라이드의 예: 장르 벡터와 "액션·코미디를 좋아함" 벡터의 코사인 유사도
+1) 작은 예: 장르 벡터와 "액션·코미디를 좋아함" 벡터의 코사인 유사도
 2) 사용자 A의 평점으로 프로필을 만들고, 안 본 영화를 코사인 유사도로 줄 세운다.
    아무도 평가하지 않은 새 영화(M7)도 장르만 있으면 점수를 받는다.
 3) 하이브리드: 협업 필터링 점수와 콘텐츠 점수를 가중치로 섞는다.
@@ -65,10 +65,10 @@ def hybrid_score(cf, content, alpha):
 
 
 def slide_example():
-    """1) 슬라이드의 예: 장르 (액션, 코미디, 드라마)"""
+    """1) 작은 예: 장르 (액션, 코미디, 드라마)"""
     movies = [[1, 0, 0], [1, 1, 0], [0, 0, 1]]
     likes = [1, 1, 0]
-    print("slides: genres (action, comedy, drama), user likes (1 1 0)")
+    print("toy: genres (action, comedy, drama), user likes (1 1 0)")
     for i, m in enumerate(movies):
         print(f"  movie {i + 1} ({m[0]} {m[1]} {m[2]})  {cosine_similarity(likes, m):.3f}")
 
@@ -110,12 +110,12 @@ if __name__ == "__main__":
     for rank, m in enumerate(order, start=1):
         print(f"  {rank}. M{m + 1}  {score[m]:.3f}")
 
-    # 3) 하이브리드. 슬라이드의 점수를 반반 섞는다.
+    # 3) 하이브리드. 작은 예의 점수를 반반 섞는다.
     alpha = 0.5
     slide_cf = [0.8, 0.7, 0.3]
     slide_content = [0.6, 0.9, 0.4]
     print(f"\nhybrid = {alpha:.1f} * collaborative + {1.0 - alpha:.1f} * content")
-    print("  slides:" + "".join(f" {hybrid_score(c, s, alpha):.3f}"
+    print("  toy:" + "".join(f" {hybrid_score(c, s, alpha):.3f}"
                                 for c, s in zip(slide_cf, slide_content)))
 
     # 예제 01의 피어슨 예측(M3 4.464, M6 1.536)을 5로 나눠 0~1로 맞춘다.

@@ -29,7 +29,7 @@ python3 content_based_filtering.py
 - 결과
 
 ```console
-slides: genres (action, comedy, drama), user likes (1 1 0)
+toy: genres (action, comedy, drama), user likes (1 1 0)
   movie 1 (1 0 0)  0.707
   movie 2 (1 1 0)  1.000
   movie 3 (0 0 1)  0.000
@@ -50,7 +50,7 @@ score = cosine(profile, genres), movies A has not rated
   3. M6  0.189
 
 hybrid = 0.5 * collaborative + 0.5 * content
-  slides: 0.700 0.800 0.350
+  toy: 0.700 0.800 0.350
   A: M3  cf 0.893  content 0.802  -> 0.847
   A: M7  cf  none  content 0.764  -> 0.764
   A: M6  cf 0.307  content 0.189  -> 0.248
@@ -58,7 +58,7 @@ hybrid = 0.5 * collaborative + 0.5 * content
 
 두 구현이 같은 결과를 낸다.
 
-- **첫 세 줄**은 슬라이드의 예다. 액션·코미디를 좋아하는 사용자에게
+- **첫 세 줄**은 장르 세 개짜리 작은 예다. 액션·코미디를 좋아하는 사용자에게
   액션+코미디 영화가 1.000, 액션 영화가 0.707, 드라마가 0이다.
 - **프로필**: A는 액션 영화 셋(M1·M2·M4)을 높게 주고 코미디·드라마인 M5를
   낮게 줬다. 평점에서 3을 뺀 만큼 장르를 더하면 액션이 5로 압도한다.
@@ -66,7 +66,7 @@ hybrid = 0.5 * collaborative + 0.5 * content
   예제 01의 협업 필터링과 같은 결론이다.
 - **새 영화 M7**은 아무도 평가하지 않았지만 장르만으로 0.764를 받았다.
   협업 필터링은 M7에 점수를 줄 수 없다(아이템 콜드 스타트).
-- **하이브리드**: 슬라이드의 두 점수를 반반 섞으면 0.700, 0.800, 0.350이다.
+- **하이브리드**: 작은 예의 두 점수를 반반 섞으면 0.700, 0.800, 0.350이다.
   A에게는 예제 01의 피어슨 예측을 5로 나눠 0\~1로 맞춘 뒤 섞었고, 협업
   필터링 점수가 없는 M7은 콘텐츠 점수를 그대로 쓴다.
 

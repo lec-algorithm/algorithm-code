@@ -29,7 +29,7 @@ python3 collaborative_filtering.py
 - 결과
 
 ```console
-slides: users A-D, items 1-4 (0 = not rated)
+toy: users A-D, items 1-4 (0 = not rated)
 cosine        A      B      C      D
   A       1.000  0.857  0.000  0.000
   B       0.857  1.000  0.000  0.000
@@ -66,7 +66,7 @@ recommend to A (pearson): M3 (4.464)
 
 두 구현이 같은 결과를 낸다.
 
-- **첫 표**는 슬라이드의 4×4 행렬이다. A와 B가 0.857, C와 D가 0.781로
+- **첫 표**는 사용자 4명, 아이템 4개의 작은 행렬이다. A와 B가 0.857, C와 D가 0.781로
   서로 비슷하고, 겹치는 아이템이 없는 쌍은 0이다.
 - **사용자 기반**: 코사인은 B·C·E를 모두 0.7\~0.8로 비슷하게 본다. 평점이
   전부 양수라서 정반대 취향인 D도 0.466이 나온다. 피어슨은 각자의 평균을
