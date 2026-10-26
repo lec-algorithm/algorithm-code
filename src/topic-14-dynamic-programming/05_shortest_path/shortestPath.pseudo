@@ -9,27 +9,28 @@
 // u에서 첫 간선으로 x에 가면, 남은 일은 x에서 v로 간선 k-1개로 가는 같은 문제다.
 
 ALGORITHM ShortestMemo(u, v, k, memo, next)
-    INPUT   memo[k][u][v]: 처음에는 전부 -1 (아직 모름)
-    OUTPUT  비용의 최솟값, 갈 수 없으면 INF
-
-    if k = 0 then                                 // 1. 기저: 간선을 다 썼다
+    // 1. 기저: 간선을 다 썼다
+    if k = 0 then
         if u = v then return 0 else return INF
-    if memo[k][u][v] != -1 then                   // 2. 이미 구한 (k, u, v)면 바로
+    // 2. 이미 구한 (k, u, v)면 바로 돌려준다
+    if memo[k][u][v] != -1 then
         return memo[k][u][v]
-    best <- INF                                   // 3. 첫 간선 u -> x를 하나씩 골라 본다
-    for 각 간선 u -> x do
+    // 3. 첫 간선 u -> x를 하나씩 골라 본다
+    best <- INF
+    for each edge u -> x do
         r <- ShortestMemo(x, v, k-1, memo, next)
         if r != INF and w(u, x) + r < best then
             best <- w(u, x) + r
-            next[k][u][v] <- x                    //    가장 싼 첫 걸음을 적어 둔다
-    memo[k][u][v] <- best                         // 4. 적어 두고 돌려준다
+            next[k][u][v] <- x        // 가장 싼 첫 걸음을 적어 둔다
+    // 4. 적어 두고 돌려준다
+    memo[k][u][v] <- best
     return best
 
-ALGORITHM RestorePath(u, v, k, next)              // 5. 경로 복원
+ALGORITHM RestorePath(u, v, k, next)  // 5. 경로 복원
     path <- [u]
     while k > 0 do
-        u <- next[k][u][v]                        // 적어 둔 첫 걸음을 따라간다
-        path에 u 추가
+        u <- next[k][u][v]            // 적어 둔 첫 걸음을 따라간다
+        append u to path
         k <- k - 1
     return path
 
