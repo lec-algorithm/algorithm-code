@@ -1,0 +1,36 @@
+// 격자 경로: (0, 0)에서 (tx, ty)까지 가는 경로의 수
+//   한 번에 x+1 또는 y+1로만 움직인다. 장애물 칸은 지나갈 수 없다.
+//   예제: 6 x 6 격자, (0, 0) -> (5, 5), 장애물 (2, 2) (3, 3) (4, 4)
+
+ALGORITHM PathsMemo(x, y, tx, ty, memo)
+    INPUT   (x, y): 지금 칸, memo: 처음에는 전부 -1
+    OUTPUT  (x, y)에서 (tx, ty)까지 가는 경로의 수
+
+    if x = tx and y = ty then return 1           // 목표에 닿았다: 길 하나
+    if x > tx or y > ty or (x, y)가 장애물 then  // 밖으로 나갔거나 막혔다
+        return 0
+    if memo[x][y] != -1 then return memo[x][y]   // 이미 센 칸
+    memo[x][y] <- PathsMemo(x+1, y, ...) + PathsMemo(x, y+1, ...)
+    return memo[x][y]
+
+// 하향식. (x, y)에서 갈 수 있는 길 = 아래로 한 칸 간 뒤의 길 + 오른쪽으로 한 칸 간 뒤의 길
+// 칸마다 한 번씩만 세므로 시간 O(tx * ty) · 공간 O(tx * ty)
+
+
+ALGORITHM PathsTab(tx, ty)
+    OUTPUT  (0, 0)에서 (tx, ty)까지 가는 경로의 수
+
+    dp[0][0] <- 1
+    for i <- 0 to tx do
+        for j <- 0 to ty do
+            if (i, j)가 장애물 then
+                dp[i][j] <- 0                    // 막힌 칸으로 오는 길은 없다
+            else if (i, j) != (0, 0) then
+                dp[i][j] <- dp[i-1][j] + dp[i][j-1]   // 위에서 오는 길 + 왼쪽에서 오는 길
+                                                      // (격자 밖은 0)
+    return dp[tx][ty]
+
+// 상향식. dp[i][j] = (0, 0)에서 (i, j)까지 오는 경로의 수
+// 메모와 방향이 반대다 (메모는 "여기서 끝까지", 표는 "처음부터 여기까지").
+// 행 순서로 채우면 위 칸과 왼쪽 칸은 언제나 먼저 채워져 있다.
+//   시간 O(tx * ty) · 공간 O(tx * ty)

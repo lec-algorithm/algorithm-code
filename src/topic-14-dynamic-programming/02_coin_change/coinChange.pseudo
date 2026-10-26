@@ -1,0 +1,50 @@
+// 거스름돈: 금액 amount를 만드는 동전 개수의 최솟값
+//   coins = 동전 단위 m개 (같은 동전을 몇 번이든 쓸 수 있다)
+//   만들 수 없으면 INF
+//
+// 점화식
+//   C(0) = 0
+//   C(a) = min { C(a - c) + 1 : c in coins, c <= a }     a > 0
+// 마지막에 낸 동전이 c라면 나머지 a - c는 다시 같은 문제다.
+
+ALGORITHM CoinChangeMemo(amount, coins, m, memo)
+    INPUT   memo[0..amount]: 처음에는 전부 -1 (아직 모름)
+    OUTPUT  최소 동전 개수, 만들 수 없으면 INF
+
+    if amount = 0 then return 0          // 1. 기저: 0원은 동전 0개
+    if amount < 0 then return INF        //    음수 금액은 만들 수 없다
+    if memo[amount] != -1 then           // 2. 이미 구한 금액이면 바로 돌려준다
+        return memo[amount]
+    best <- INF                          // 3. 동전마다 하나씩 내 보고 나머지를 재귀로
+    for i <- 0 to m-1 do
+        r <- CoinChangeMemo(amount - coins[i], coins, m, memo)
+        if r != INF and r + 1 < best then
+            best <- r + 1
+    memo[amount] <- best                 // 4. 적어 두고 돌려준다
+    return best
+
+// 하향식. 6원에서 시작해 필요한 금액만 내려가며 구한다 (lazy).
+// {2, 3, 5}, 6원이면 6, 4, 2, 1, 3원만 풀고 5원은 끝내 풀지 않는다.
+
+
+ALGORITHM CoinChangeTab(amount, coins, m)
+    OUTPUT  최소 동전 개수와 쓴 동전 목록
+
+    dp[0] <- 0                           // 1. 초기화
+    for a <- 1 to amount do dp[a] <- INF
+    for a <- 1 to amount do              // 2. 작은 금액부터 빠짐없이
+        for i <- 0 to m-1 do
+            c <- coins[i]
+            if c <= a and dp[a - c] != INF and dp[a - c] + 1 < dp[a] then
+                dp[a] <- dp[a - c] + 1
+                choice[a] <- c           //    이 금액에서 마지막에 낸 동전
+    if dp[amount] = INF then return INF  // 3. 반환
+    a <- amount                          // 4. 경로 복원: choice를 거꾸로 따라간다
+    while a > 0 do
+        choice[a]를 출력
+        a <- a - choice[a]
+    return dp[amount]
+
+// 상향식. 1원부터 amount원까지 전부 채운다 (eager).
+// 칸 하나를 채울 때 동전 m개를 보므로 시간 O(amount * m), 공간 O(amount)
+// 주제 06의 그리디는 {50, 40, 10}, 80원에서 4개를 냈다. 이 표는 40 + 40, 2개를 찾는다.
