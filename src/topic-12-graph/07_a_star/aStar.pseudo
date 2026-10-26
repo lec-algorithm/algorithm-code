@@ -1,0 +1,32 @@
+ALGORITHM AStar(G, h, s, t, reopen)
+    INPUT   G: 가중치 방향 그래프 (모든 가중치 >= 0)
+            h: 정점마다 목표 t까지 남은 거리의 추정값 (휴리스틱)
+            s: 출발, t: 목표
+            reopen: 닫힌 정점으로 가는 더 짧은 길을 찾으면 다시 열 것인가
+    OUTPUT  s에서 t까지의 경로와 비용
+
+    for each 정점 v in G do
+        g[v] <- INF                     // s에서 v까지 지금까지 찾은 거리
+        cameFrom[v] <- -1
+        closed[v] <- false
+    g[s] <- 0
+    open <- 빈 최소 힙
+    insert (g[s] + h[s], s) into open   // f = g + h
+    while open이 비어 있지 않은 동안 do
+        (f, u) <- ExtractMin(open)      // f가 가장 작은 정점
+        if closed[u] then continue      // 낡은 항목은 버린다
+        if u = t then return PathTo(cameFrom, t), g[t]
+        closed[u] <- true               // 닫힌 목록에 넣는다
+        for each (u, v, w) in adj[u] do
+            if g[u] + w >= g[v] then continue   // 더 짧지 않으면 그대로
+            if closed[v] and not reopen then continue
+            closed[v] <- false          // (reopen일 때) 닫힌 정점을 다시 연다
+            g[v] <- g[u] + w
+            cameFrom[v] <- u
+            insert (g[v] + h[v], v) into open
+    return 경로 없음
+
+// h = 0이면 Dijkstra와 같다. h가 실제 남은 거리에 가까울수록 목표 쪽부터 연다.
+// h가 실제 거리를 넘지 않으면(admissible) 다시 열기를 허용할 때 최단 경로를 찾는다.
+// 다시 열지 않으려면 간선마다 h(u) <= w(u, v) + h(v)여야 한다(consistent).
+// 같은 f면 먼저 넣은 항목을 먼저 꺼낸다.
