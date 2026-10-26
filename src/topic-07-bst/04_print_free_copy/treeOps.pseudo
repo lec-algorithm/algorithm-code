@@ -1,0 +1,26 @@
+ALGORITHM PrintTree(node, prefix, isLast)   // 모양 출력: 현재를 먼저 적고 자식을 들여 적는다 (전위)
+    prefix + (isLast이면 "└── " 아니면 "├── ") + node.key를 출력
+    if node에 자식이 하나라도 있으면 then
+        next <- prefix + (isLast이면 "    " 아니면 "│   ")
+        PrintTree(node.left, next, false)    // 왼쪽이 위, 빈 자식은 "-"
+        PrintTree(node.right, next, true)
+
+ALGORITHM ClearTree(node)                   // 트리 해제: 자식부터 지운다 (후위)
+    if node != NULL then
+        ClearTree(node.left)
+        ClearTree(node.right)
+        free(node)                          // 자식이 모두 해제된 뒤라 안전하다
+    return NULL
+
+ALGORITHM CopyTree(node)                    // 트리 복사: 부모부터 만든다 (전위)
+    if node = NULL then
+        return NULL
+    copy <- 새 노드(node.key)               // 부모가 있어야 자식을 매달 수 있다
+    copy.left <- CopyTree(node.left)
+    copy.right <- CopyTree(node.right)
+    return copy
+
+// 셋 다 노드마다 한 번씩 방문하므로 O(n)이다.
+// 정렬된 출력은 중위, 해제는 후위, 복사는 전위가 알맞다.
+// 해제를 전위로 하면 부모를 먼저 지워 자식으로 가는 주소를 잃는다.
+// 전위 순서를 저장했다가 그 순서대로 다시 삽입하면 같은 모양의 트리가 된다.
