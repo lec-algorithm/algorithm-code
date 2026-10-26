@@ -23,7 +23,6 @@ typedef struct {
 } ChainingTable;
 
 /* 이 예제의 키는 대문자 한 글자다. 글자마다 정수 해시 코드를 정해 두었다.
- * 원본 강의 그림의 해시값(M = 5)이 이 코드를 M으로 나눈 나머지와 같다.
  * 표에 없는 글자는 ASCII 코드를 그대로 쓴다. */
 static const char LETTERS[] = "ACEHLMPRSXY";
 static const int CODES[] = {20, 69, 10, 4, 38, 49, 78, 14, 22, 47, 52};

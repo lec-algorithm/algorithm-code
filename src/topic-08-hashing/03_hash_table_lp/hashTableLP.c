@@ -20,8 +20,8 @@ typedef struct {
     int *values;
 } ProbingTable;
 
-/* 02 예제와 같은 해시 코드. 원본 강의 그림의 해시값(M = 16)이 이 코드를
- * M으로 나눈 나머지와 같다. 표에 없는 글자는 ASCII 코드를 그대로 쓴다. */
+/* 02 예제와 같은 해시 코드. 해시값은 이 코드를 M으로 나눈 나머지다.
+ * 표에 없는 글자는 ASCII 코드를 그대로 쓴다. */
 static const char LETTERS[] = "ACEHLMPRSXY";
 static const int CODES[] = {20, 69, 10, 4, 38, 49, 78, 14, 22, 47, 52};
 
