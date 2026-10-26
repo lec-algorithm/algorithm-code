@@ -8,18 +8,19 @@
 //            = max(dp[i-1][c], dp[i-1][c - w[i]] + v[i])   그 밖     (안 담는다 / 담는다)
 
 ALGORITHM Knapsack(w, v, n, W)
-    OUTPUT  최대 가치와 담은 물건
-
-    for c <- 0 to W do dp[0][c] <- 0              // 1. 물건이 없으면 가치 0
-    for i <- 1 to n do                            // 2. 물건을 하나씩 늘려 가며
+    // 1. 물건이 없으면 가치 0
+    for c <- 0 to W do dp[0][c] <- 0
+    // 2. 물건을 하나씩 늘려 가며
+    for i <- 1 to n do
         for c <- 0 to W do
-            dp[i][c] <- dp[i-1][c]                //    물건 i를 안 담는 경우 (위 칸)
+            dp[i][c] <- dp[i-1][c]                      // 안 담는 경우 (위 칸)
             if w[i] <= c and dp[i-1][c - w[i]] + v[i] > dp[i][c] then
-                dp[i][c] <- dp[i-1][c - w[i]] + v[i]   // 담는 경우 (위 줄, w[i]만큼 왼쪽 칸)
-    c <- W                                        // 3. 경로 복원: 아래에서 위로
+                dp[i][c] <- dp[i-1][c - w[i]] + v[i]    // 담는 경우
+    // 3. 경로 복원: 아래에서 위로, 위 칸과 다르면 물건 i를 담은 것
+    c <- W
     for i <- n downto 1 do
-        if dp[i][c] != dp[i-1][c] then            //    위 칸과 다르면 물건 i를 담은 것
-            물건 i를 담았다
+        if dp[i][c] != dp[i-1][c] then
+            take item i
             c <- c - w[i]
     return dp[n][W]
 
