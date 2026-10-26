@@ -11,7 +11,7 @@ ALGORITHM Prim(G, s)
     insert (key[s], s) into PQ
     while PQ가 비어 있지 않고 |mst| < V - 1 동안 do
         (k, u) <- ExtractMin(PQ)        // 지금 트리에 가장 가까운 정점
-        if inTree[u] then continue      // 예전에 넣어 둔 낡은 항목은 버린다
+        if inTree[u] then continue      // 앞서 넣어 둔 낡은 항목은 버린다
         inTree[u] <- true
         if u != s then mst에 (via[u], u, k) 추가
         for each (u, v, w) in adj[u] do
