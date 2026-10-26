@@ -1,0 +1,29 @@
+ALGORITHM Dijkstra(G, s)
+    INPUT   G: 가중치 방향 그래프 (모든 가중치 >= 0), s: 출발 정점
+    OUTPUT  dist[v]: s에서 v까지의 최단 거리, from[v]: 그 경로에서 v 바로 앞 정점
+
+    for each 정점 v in G do
+        dist[v] <- INF
+        from[v] <- -1
+        done[v] <- false
+    dist[s] <- 0
+    PQ <- 빈 최소 힙
+    insert (dist[s], s) into PQ
+    while PQ가 비어 있지 않은 동안 do
+        (d, u) <- ExtractMin(PQ)        // 아직 확정 안 된 정점 중 가장 가까운 것
+        if done[u] then continue        // 낡은 항목은 버린다
+        done[u] <- true                 // 이 거리는 이제 바뀌지 않는다
+        for each (u, v, w) in adj[u] do
+            if not done[v] and dist[u] + w < dist[v] then
+                dist[v] <- dist[u] + w  // 완화(relaxation): 더 짧은 길을 찾았다
+                from[v] <- u
+                insert (dist[v], v) into PQ
+    return dist, from
+
+// Prim과 같은 틀이다. 다른 것은 힙에 넣는 값 하나뿐이다.
+//   Prim:     key[v] <- w               (트리에 붙는 간선 하나의 가중치)
+//   Dijkstra: dist[v] <- dist[u] + w    (출발점에서 여기까지 쌓인 거리)
+// 그리디 선택: 지금 가장 가까운 정점의 거리를 확정한다.
+// 가중치가 음수이면 확정한 거리를 뒤에 더 줄일 수 있어서 이 선택이 틀린다.
+// 이진 힙이면 O(E log V)
+// 같은 거리면 먼저 넣은 항목을 먼저 꺼낸다.
