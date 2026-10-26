@@ -1,0 +1,43 @@
+ALGORITHM BuildNFA(re)
+    INPUT   re: 글자, '.', '*', '|', 괄호로 된 정규식 (전체를 괄호로 감싼 것)
+    OUTPUT  ε 전이 그래프 G. 상태는 0..M이고 M이 수락 상태 (M = |re|)
+
+    // 상태 i는 re[i] 한 글자다. 글자 상태 i는 그 글자를 읽고 i+1로 간다(매치 전이).
+    // 나머지 전이는 전부 ε 전이이고, 괄호의 짝을 찾으려고 스택을 쓴다.
+    ops <- 빈 스택
+    for i <- 0 to M-1 do
+        lp <- i                              // '*'가 붙을 덩어리의 시작
+        if re[i] = '(' 또는 re[i] = '|' then
+            ops에 i를 넣는다
+        else if re[i] = ')' then
+            or <- ops에서 꺼낸다
+            if re[or] = '|' then
+                lp <- ops에서 꺼낸다          // 짝이 되는 '('
+                G에 lp -> or+1 추가          // 왼쪽 갈래를 건너뛰고 오른쪽 갈래로
+                G에 or -> i 추가             // 왼쪽 갈래 끝에서 ')'로
+            else
+                lp <- or
+        if i < M-1 그리고 re[i+1] = '*' then
+            G에 lp -> i+1 추가               // 덩어리를 0번 (건너뛰기)
+            G에 i+1 -> lp 추가               // 덩어리를 한 번 더 (되풀이)
+        if re[i] ∈ { '(', '*', ')' } then
+            G에 i -> i+1 추가                // 기호는 읽을 글자 없이 다음으로
+
+ALGORITHM Closure(G, S)
+    INPUT   상태 집합 S
+    OUTPUT  S에서 ε 전이만 따라 갈 수 있는 모든 상태 (DFS)
+
+ALGORITHM Recognizes(re, text)
+    INPUT   re, text
+    OUTPUT  text 전체가 re에 맞으면 true
+
+    G <- BuildNFA(re)
+    pc <- Closure(G, {0})                    // 지금 있을 수 있는 상태들
+    for 글자 ch in text do
+        match <- { i+1 : i ∈ pc, re[i]가 글자이고 (re[i] = ch 또는 re[i] = '.') }
+        pc <- Closure(G, match)
+    return M ∈ pc
+
+// 상태를 하나만 들고 다니지 않고 "있을 수 있는 상태 전부"를 들고 다닌다.
+// 그래서 되돌아갈 일이 없다. 글자 하나에 상태 M개와 ε 전이 O(M)개를 보므로
+// 텍스트 길이 N에 대해 최악 O(MN)이다.
