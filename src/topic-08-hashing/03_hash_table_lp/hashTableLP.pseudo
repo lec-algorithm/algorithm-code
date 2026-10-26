@@ -1,0 +1,43 @@
+ALGORITHM Hash(key, M)
+    return hashCode(key) mod M
+
+ALGORITHM Put(T, key, value)            // T.keys, T.values: 크기 M인 배열 둘
+    if N / M > 0.7 then Resize(T, 2M)   // 너무 차면 먼저 두 배로 늘린다
+    i <- Hash(key, M)
+    while T.keys[i] ≠ 빈칸 do           // 빈칸을 만날 때까지 오른쪽으로
+        if T.keys[i] = key then
+            T.values[i] <- value        // 같은 키가 있으면 값만 바꾼다
+            return
+        i <- (i + 1) mod M              // 끝에 닿으면 0번 칸으로 돌아간다
+    T.keys[i] <- key, T.values[i] <- value
+    N <- N + 1
+
+ALGORITHM Get(T, key)
+    i <- Hash(key, M)
+    while T.keys[i] ≠ 빈칸 do
+        if T.keys[i] = key then return T.values[i]
+        i <- (i + 1) mod M
+    return 없음                         // 빈칸을 만나면 그 키는 없다
+
+ALGORITHM Delete(T, key)
+    i <- Hash(key, M)
+    while T.keys[i] ≠ key do            // 먼저 키를 찾는다
+        if T.keys[i] = 빈칸 then return 실패
+        i <- (i + 1) mod M
+    T.keys[i] <- 빈칸, N <- N - 1
+    i <- (i + 1) mod M
+    while T.keys[i] ≠ 빈칸 do           // 같은 무리에서 뒤따르던 키들을
+        k, v <- T.keys[i], T.values[i]
+        T.keys[i] <- 빈칸, N <- N - 1
+        Put(T, k, v)                    // 꺼냈다가 다시 넣는다
+        i <- (i + 1) mod M
+    if 0 < N ≤ M/8 then Resize(T, M/2)  // 너무 비면 절반으로 줄인다
+
+ALGORITHM Resize(T, newM)
+    새 배열 크기 newM을 만들고, T의 키를 0번 칸부터 차례로 Put으로 다시 넣는다
+
+// 그냥 지우면 그 칸이 빈칸이 되어, 뒤에 있던 키를 찾는 Get이 거기서 멈춘다.
+// 그래서 뒤따르는 키들을 다시 넣는다. 다른 방법은 지운 칸에 "지워짐" 표시
+// (tombstone)를 남기는 것이다. Get은 표시를 빈칸이 아닌 것으로 보고 지나간다.
+// 해시가 고르고 적재율 α = N/M이 1보다 충분히 작으면 평균 O(1).
+// 탐색 횟수의 평균은 성공 약 ½(1 + 1/(1-α)), 실패 약 ½(1 + 1/(1-α)²)
