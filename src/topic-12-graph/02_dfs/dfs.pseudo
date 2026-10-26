@@ -1,0 +1,47 @@
+ALGORITHM DFS(G, s)                      // 스택으로 도는 반복형
+    INPUT   G: 인접 목록으로 표현한 그래프, s: 시작 정점
+    OUTPUT  방문 순서, 정점마다 from(누가 스택에 넣었나)
+
+    for each 정점 v in G do
+        marked[v] <- false
+    S <- 빈 스택 (LIFO)
+    push (s, -1) into S
+    while S가 비어 있지 않은 동안 do
+        (v, p) <- pop from S            // 가장 나중에 넣은 정점
+        if marked[v] then continue      // 이미 방문했으면 버린다
+        marked[v] <- true               // 꺼낼 때 표시한다
+        from[v] <- p
+        for each w in adj[v] do         // 편의상 오름차순으로 넣는다
+            if not marked[w] then
+                push (w, v) into S
+
+ALGORITHM Components(G)                  // 재귀형 DFS의 응용
+    count <- 0
+    for each 정점 v in G do
+        if not marked[v] then
+            Visit(v, count)             // v에서 닿는 정점이 모두 같은 id
+            count <- count + 1
+    return count
+
+ALGORITHM Visit(v, c)
+    marked[v] <- true
+    id[v] <- c
+    for each w in adj[v] do
+        if not marked[w] then Visit(w, c)
+
+ALGORITHM TopologicalSort(G)             // 방향 그래프, 사이클이 없어야 한다
+    label <- V
+    for each 정점 v in G do
+        if not marked[v] then Finish(v)
+    return 정점을 f 오름차순으로 늘어놓은 것
+
+ALGORITHM Finish(s)
+    marked[s] <- true
+    for each 간선 (s, v) do
+        if not marked[v] then Finish(v)
+    f[s] <- label                       // 나가는 간선을 다 본 뒤에 번호를 준다
+    label <- label - 1                  // 먼저 끝나는 정점이 뒤 번호를 받는다
+
+// 스택은 나중에 넣은 것을 먼저 꺼낸다. 그래서 한 이웃으로 끝까지 파고든 뒤에야
+// 돌아와 다른 이웃을 본다. 재귀 호출도 같은 일을 한다(호출 스택이 그 스택이다).
+// 정점마다 한 번 방문하고 간선마다 양 끝에서 한 번씩 보므로 O(V + E)
