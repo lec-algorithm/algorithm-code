@@ -1,0 +1,28 @@
+ALGORITHM MsdRadixSort(A, n)
+    INPUT   A: 0 이상의 정수 n개
+    OUTPUT  A를 제자리에서 오름차순으로 정렬
+
+    max <- A의 최댓값
+    exp <- 1
+    while max / exp >= 10 do         // 가장 높은 자리의 exp: 802이면 100
+        exp <- exp * 10
+    MsdRecursive(A, 0, n-1, exp)
+
+ALGORITHM MsdRecursive(A, lo, hi, exp)
+    // 기저 조건: 원소가 하나 이하이거나 더 볼 자리가 없으면 끝
+    if lo >= hi or exp = 0 then return
+
+    // 1) A[lo..hi]만 exp 자리로 안정 카운팅 정렬한다 (LSD의 한 패스와 같다)
+    //    size[d]: 이 자리의 숫자가 d인 원소 수 = 버킷 d의 크기
+    CountingSortByDigit(A, lo, hi, exp, size)
+
+    // 2) 같은 숫자끼리 모인 구간(버킷)마다 다음 자리로 재귀
+    start <- lo
+    for d <- 0 to 9 do
+        if size[d] > 1 then          // 원소가 하나뿐인 버킷은 이미 제자리
+            MsdRecursive(A, start, start + size[d] - 1, exp / 10)
+        start <- start + size[d]
+
+// 높은 자리에서 이미 갈린 원소는 다시 보지 않는다. 버킷이 크기 1이 되면 조기 종료
+// 최선 O(n) (첫 자리에서 모두 갈림), 최악 O(d (n + k)) (모든 자리를 끝까지 봄)
+// 재귀 호출마다 count 배열(k칸)이 필요해 작은 버킷이 많으면 오버헤드가 크다
