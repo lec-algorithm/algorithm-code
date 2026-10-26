@@ -36,10 +36,11 @@ ALGORITHM LisTab(arr, n)
     for i <- 1 to n-1 do                         // 2. 앞의 원소를 모두 훑는다
         for j <- 0 to i-1 do
             if arr[j] < arr[i] and dp[j] + 1 > dp[i] then
-                dp[i] <- dp[j] + 1               //    arr[j]로 끝나는 수열 뒤에 arr[i]를 잇는다
+                dp[i] <- dp[j] + 1               //    arr[j] 뒤에 arr[i]를 잇는다
                 prev[i] <- j
-    end <- dp가 가장 큰 첫 인덱스                // 3. 최댓값 찾기
-    end부터 prev를 따라가며 거꾸로 모은다       // 4. 경로 복원
+    // 3. 최댓값 찾기: dp가 가장 큰 첫 인덱스
+    end <- argmax(dp)
+    // 4. 경로 복원: end부터 prev를 따라가며 거꾸로 모은다
     return dp[end]
 
 // 상향식. dp[i] = arr[i]로 끝나는 가장 긴 증가 부분수열의 길이
