@@ -7,7 +7,7 @@ ALGORITHM LongestRepeatedSubstring(T, n)
 
     // 반복되는 부분 문자열은 두 접미사의 공통 접두사다
     // 정렬하면 공통 접두사가 긴 접미사끼리 이웃하므로 이웃 쌍만 보면 된다
-    best <- 0, at <- 0
+    best <- -1, at <- 0                   // LCP[1] >= 0이므로 at은 1 이상이 된다
     for j <- 1 to n-1 do
         if LCP[j] > best then
             best <- LCP[j], at <- j

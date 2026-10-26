@@ -35,8 +35,8 @@ def build_lcp(text, sa):
 
 
 def find_longest_repeated_substring(text, sa, lcp):
-    """LCP의 최댓값과 그 자리 j를 돌려준다. 같은 최댓값이면 앞의 것."""
-    best, at = 0, 0
+    """LCP의 최댓값과 그 자리 j(1 이상)를 돌려준다. 같은 최댓값이면 앞의 것."""
+    best, at = -1, 0
     for j in range(1, len(text)):
         if lcp[j] > best:
             best, at = lcp[j], j

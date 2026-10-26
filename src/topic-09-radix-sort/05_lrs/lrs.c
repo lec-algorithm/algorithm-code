@@ -51,9 +51,9 @@ void buildLcp(const char *text, const int sa[], int n, int lcp[]) {
     }
 }
 
-/* LCP의 최댓값을 돌려주고 그 자리 j를 at에 남긴다. 같은 최댓값이면 앞의 것. */
+/* LCP의 최댓값을 돌려주고 그 자리 j(1 이상)를 at에 남긴다. 같은 최댓값이면 앞의 것. */
 int findLongestRepeatedSubstring(const int lcp[], int n, int *at) {
-    int best = 0;
+    int best = -1;
     *at = 0;
     for (int j = 1; j < n; j++) {
         if (lcp[j] > best) {
