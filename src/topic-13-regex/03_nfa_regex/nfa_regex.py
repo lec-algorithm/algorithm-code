@@ -90,7 +90,9 @@ if __name__ == "__main__":
     print("  state" + "".join(f"{i:3d}" for i in range(M + 1)))
     print("  char " + "".join(f"{c:>3}" for c in re_))
     print()
-    print("  eps  " + "".join(f" {v}->{w}" for v, w in edges))
+    for k in range(0, len(edges), 9):               # 9개마다 줄을 바꾼다
+        head = "  eps  " if k == 0 else "       "
+        print(head + "".join(f" {v}->{w}" for v, w in edges[k:k + 9]))
     print()
     print("text = 1001")
     ok = recognizes("1001", True)

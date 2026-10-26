@@ -140,6 +140,9 @@ int main(void) {
     }
     printf("\n\n  eps  ");
     for (int e = 0; e < edgeCount; e++) {
+        if (e > 0 && e % 9 == 0) {
+            printf("\n       ");                  /* 9개마다 줄을 바꾼다 */
+        }
         printf(" %d->%d", edgeFrom[e], edgeTo[e]);
     }
     printf("\n\ntext = 1001\n");
