@@ -1,0 +1,39 @@
+// 간선을 정확히 k개 써서 u에서 v로 가는 가장 싼 길
+//   방향 그래프, 간선마다 비용 w(u, x) > 0
+//   예제: 정점 0~5, 0 -> 3을 간선 3개로. 답은 0 -> 2 -> 4 -> 3, 비용 2 + 3 + 1 = 6
+//
+// 점화식
+//   S(u, v, 0) = 0     u = v일 때
+//              = INF   그 밖
+//   S(u, v, k) = min { w(u, x) + S(x, v, k-1) : u -> x 간선 }      k > 0
+// u에서 첫 간선으로 x에 가면, 남은 일은 x에서 v로 간선 k-1개로 가는 같은 문제다.
+
+ALGORITHM ShortestMemo(u, v, k, memo, next)
+    INPUT   memo[k][u][v]: 처음에는 전부 -1 (아직 모름)
+    OUTPUT  비용의 최솟값, 갈 수 없으면 INF
+
+    if k = 0 then                                 // 1. 기저: 간선을 다 썼다
+        if u = v then return 0 else return INF
+    if memo[k][u][v] != -1 then                   // 2. 이미 구한 (k, u, v)면 바로
+        return memo[k][u][v]
+    best <- INF                                   // 3. 첫 간선 u -> x를 하나씩 골라 본다
+    for 각 간선 u -> x do
+        r <- ShortestMemo(x, v, k-1, memo, next)
+        if r != INF and w(u, x) + r < best then
+            best <- w(u, x) + r
+            next[k][u][v] <- x                    //    가장 싼 첫 걸음을 적어 둔다
+    memo[k][u][v] <- best                         // 4. 적어 두고 돌려준다
+    return best
+
+ALGORITHM RestorePath(u, v, k, next)              // 5. 경로 복원
+    path <- [u]
+    while k > 0 do
+        u <- next[k][u][v]                        // 적어 둔 첫 걸음을 따라간다
+        path에 u 추가
+        k <- k - 1
+    return path
+
+// 메모 없이 돌리면 간선을 고를 때마다 갈라지므로 O(d^k)이다 (d: 나가는 간선 수).
+// 부분 문제는 (k, u, v)뿐이고 하나를 풀 때 간선 d개를 보므로
+//   시간 O(k * V * d) · 공간 O(k * V)   (v를 고정했을 때, V: 정점 수)
+// best가 바뀔 때 next를 함께 적어 두면, 답을 낸 뒤 처음부터 따라가 길을 되살릴 수 있다.
