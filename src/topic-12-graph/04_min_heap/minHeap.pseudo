@@ -1,0 +1,37 @@
+// 최소 힙: 완전 이진 트리를 배열에 담는다. 부모 값 <= 자식 값
+// 인덱스 i의 부모는 (i-1)/2, 왼쪽 자식은 2i+1, 오른쪽 자식은 2i+2
+
+ALGORITHM Insert(heap, x)
+    if heap.size = heap.capacity then return false
+    heap[heap.size] <- x                // 맨 끝 빈자리에 넣는다
+    heap.size <- heap.size + 1
+    HeapifyUp(heap, heap.size - 1)
+    return true
+
+ALGORITHM HeapifyUp(heap, i)             // sift up
+    while i > 0 do
+        p <- (i - 1) / 2
+        if heap[i] >= heap[p] then break    // 부모보다 작지 않으면 제자리
+        swap heap[i], heap[p]
+        i <- p                          // 한 층 올라가서 다시 본다
+
+ALGORITHM ExtractMin(heap)
+    if heap.size = 0 then error
+    min <- heap[0]                      // 루트가 최솟값
+    heap[0] <- heap[heap.size - 1]      // 마지막 원소를 루트로 옮긴다
+    heap.size <- heap.size - 1
+    HeapifyDown(heap, 0)
+    return min
+
+ALGORITHM HeapifyDown(heap, i)           // sift down
+    loop
+        m <- i
+        l <- 2i + 1, r <- 2i + 2
+        if l < heap.size and heap[l] < heap[m] then m <- l
+        if r < heap.size and heap[r] < heap[m] then m <- r
+        if m = i then break             // 두 자식보다 크지 않으면 제자리
+        swap heap[i], heap[m]           // 더 작은 자식과 바꾼다
+        i <- m                          // 한 층 내려가서 다시 본다
+
+// 트리의 높이가 log n이므로 Insert와 ExtractMin은 모두 O(log n)
+// 최솟값 보기(heap[0])는 O(1)

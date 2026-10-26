@@ -1,0 +1,26 @@
+ALGORITHM Kruskal(G)
+    INPUT   G: 연결된 무방향 가중치 그래프 (정점 V개, 간선 E개)
+    OUTPUT  최소 스패닝 트리의 간선들과 총 가중치
+
+    edges <- G의 간선을 가중치 오름차순으로 정렬
+    for each 정점 v in G do
+        comp[v] <- v                    // 처음에는 정점마다 따로 한 덩어리
+    mst <- 빈 목록
+    for each (u, v, w) in edges do
+        if comp[u] != comp[v] then      // 다른 덩어리를 잇는다 -> 사이클 없음
+            mst에 (u, v, w) 추가
+            Merge(comp, comp[u], comp[v])
+            if |mst| = V - 1 then break // 간선 V-1개면 트리 완성
+        else                            // 같은 덩어리 안 -> 넣으면 사이클
+            (u, v)를 버린다
+    return mst
+
+ALGORITHM Merge(comp, a, b)
+    small <- min(a, b)                  // 덩어리 번호는 그 안의 가장 작은 정점
+    for each 정점 x do
+        if comp[x] = a or comp[x] = b then comp[x] <- small
+
+// 그리디 선택: 아직 안 본 간선 중 가장 가벼운 것을, 사이클을 만들지 않으면 넣는다.
+// 정렬 O(E log E). 판정은 O(1), 합치기는 O(V)인데 V-1번만 일어나므로 O(V^2)
+// 합치기를 union-find로 바꾸면 거의 상수 시간이 되어 전체가 O(E log E)
+// 가중치는 원래 표의 값에 100을 곱한 정수로 다룬다 (0.16 -> 16)
