@@ -1,0 +1,41 @@
+ALGORITHM LsdRadixSort(A, n)
+    INPUT   A: 0 이상의 정수 n개
+    OUTPUT  A를 제자리에서 오름차순으로 정렬
+
+    max <- A의 최댓값                 // 자릿수를 정한다: 531이면 3자리
+    exp <- 1
+    while max / exp > 0 do           // exp = 1, 10, 100, ... 가장 낮은 자리부터
+        CountingSortByDigit(A, n, exp)
+        exp <- exp * 10
+
+ALGORITHM CountingSortByDigit(A, n, exp)
+    // 주제 03의 카운팅 정렬과 같다. 키가 값 전체가 아니라 한 자리일 뿐이다
+    for d <- 0 to 9 do count[d] <- 0
+
+    // 1) 세기: 이 자리의 숫자마다 몇 개 있는지
+    for i <- 0 to n-1 do
+        d <- (A[i] / exp) mod 10
+        count[d] <- count[d] + 1
+
+    // 2) 누적: 숫자 d인 원소들이 끝나는 위치
+    for d <- 1 to 9 do
+        count[d] <- count[d] + count[d-1]
+
+    // 3) 배치: 뒤에서부터 읽어야 같은 숫자끼리 순서가 유지된다 (안정)
+    for i <- n-1 downto 0 do
+        d <- (A[i] / exp) mod 10
+        count[d] <- count[d] - 1
+        B[count[d]] <- A[i]
+
+    for i <- 0 to n-1 do A[i] <- B[i]
+
+ALGORITHM LsdStringSort(S, n, w)
+    INPUT   S: 길이가 모두 w인 문자열 n개
+    OUTPUT  S를 사전순으로 정렬
+
+    for d <- w-1 downto 0 do          // 마지막 문자부터 첫 문자로
+        S를 d번째 문자를 키로 카운팅 정렬한다 (R = 256, 안정)
+
+// 원소끼리 비교하지 않는다. 자리 d개마다 카운팅 정렬 한 번
+// 시간 O(d (n + k)), 공간 O(n + k)   (k: 한 자리가 가질 수 있는 값의 수, 숫자 10 · 바이트 256)
+// 각 패스가 안정이어야 앞 패스에서 만든 순서가 다음 패스에서 깨지지 않는다
