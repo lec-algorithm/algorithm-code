@@ -1,0 +1,30 @@
+ALGORITHM Delete(root, key)
+    INPUT   root: 이진 탐색 트리의 루트, key: 지울 값
+    OUTPUT  key를 지운 트리의 루트
+
+    if root = NULL then
+        return NULL                         // 지울 값이 없다
+    if key < root.key then
+        root.left <- Delete(root.left, key)
+    else if key > root.key then
+        root.right <- Delete(root.right, key)
+    else                                    // root가 지울 노드다
+        if root.left = NULL then            // 경우 1·2: 자식이 0개이거나 오른쪽 하나
+            return root.right               //   (자식이 없으면 NULL을 돌려준다)
+        if root.right = NULL then           // 경우 2: 왼쪽 자식 하나
+            return root.left
+        // 경우 3: 자식이 둘
+        succ <- FindMin(root.right)         // 후속자: 오른쪽 서브트리의 가장 작은 값
+        root.key <- succ.key                // 후속자의 키를 이 자리에 복사하고
+        root.right <- Delete(root.right, succ.key)   // 원래 후속자를 지운다
+    return root
+
+ALGORITHM FindMin(node)
+    while node.left != NULL do
+        node <- node.left                   // 왼쪽 끝까지
+    return node
+
+// 후속자(successor)는 중위 순서에서 바로 다음 값이다. 왼쪽 자식이 없으므로
+// 후속자를 지우는 일은 언제나 경우 1이나 2로 끝난다.
+// 후속자 대신 선행자(predecessor, 왼쪽 서브트리의 가장 큰 값)를 써도 된다.
+// 지울 노드를 찾아 내려가고 후속자를 찾아 더 내려가도 한 길이므로 O(h)다.

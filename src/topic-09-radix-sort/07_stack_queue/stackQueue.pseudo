@@ -1,0 +1,29 @@
+// 스택: 넣은 쪽으로 꺼낸다. 나중에 넣은 것이 먼저 나온다 (LIFO)
+ALGORITHM Push(S, x)        S.items[S.top] <- x;  S.top <- S.top + 1
+ALGORITHM Pop(S)            S.top <- S.top - 1;   return S.items[S.top]
+
+// 큐: 뒤로 넣고 앞에서 꺼낸다. 먼저 넣은 것이 먼저 나온다 (FIFO)
+ALGORITHM Enqueue(Q, x)     Q.items[Q.tail] <- x; Q.tail <- Q.tail + 1
+ALGORITHM Dequeue(Q)        x <- Q.items[Q.head]; Q.head <- Q.head + 1; return x
+
+ALGORITHM BucketRadixSort(A, n, kind)
+    INPUT   A: 0 이상의 정수 n개, kind: 버킷을 큐로 쓸지 스택으로 쓸지
+    OUTPUT  자리마다 버킷에 흩었다가 모은 결과
+
+    exp <- 1
+    while max(A) / exp > 0 do
+        // 흩기: 앞에서부터 읽어 이 자리의 숫자 d번 버킷에 넣는다
+        for i <- 0 to n-1 do
+            d <- (A[i] / exp) mod 10
+            bucket[d]에 A[i]를 넣는다            // Enqueue 또는 Push
+        // 모으기: 버킷 0부터 9까지 비울 때까지 꺼내 A에 차례로 적는다
+        k <- 0
+        for d <- 0 to 9 do
+            while bucket[d]가 비어 있지 않은 동안 do
+                A[k] <- bucket[d]에서 꺼낸다      // Dequeue 또는 Pop
+                k <- k + 1
+        exp <- exp * 10
+
+// 큐 버킷은 같은 숫자끼리 들어온 순서대로 나온다: 안정. 결과가 정렬된다
+// 스택 버킷은 같은 숫자끼리 순서가 뒤집힌다: 불안정. 앞 패스의 순서가 깨진다
+// 카운팅 정렬의 "뒤에서부터 배치"는 큐 버킷과 같은 일을 배열 하나로 한다

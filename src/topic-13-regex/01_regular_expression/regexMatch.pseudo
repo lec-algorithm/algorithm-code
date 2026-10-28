@@ -1,0 +1,36 @@
+ALGORITHM Match(pattern, text)
+    INPUT   pattern: 글자, '.'(아무 글자 하나), 'x*'(x를 0번 이상)로 된 정규식
+            text: 문자열
+    OUTPUT  text의 앞부분이 pattern에 맞으면 true
+
+    if pattern이 비었으면 then
+        return true                         // 패턴을 다 썼으면 성공
+    if pattern[1] = '*' then
+        return MatchStar(pattern[0], pattern[2..], text)
+    if text가 남았고 (pattern[0] = '.' 또는 pattern[0] = text[0]) then
+        return Match(pattern[1..], text[1..])   // 한 글자씩 맞춰 나간다
+    return false
+
+ALGORITHM MatchStar(c, pattern, text)
+    INPUT   c: '*' 앞의 글자, pattern: '*' 뒤의 나머지 패턴
+    OUTPUT  c를 0개 이상 먹은 뒤 나머지가 맞으면 true
+
+    if Match(pattern, text) then             // c를 0개 먹고 나머지 시도
+        return true
+    while text가 남았고 (text[0] = c 또는 c = '.') do
+        text <- text[1..]                    // c를 하나 더 먹고
+        if Match(pattern, text) then         // 나머지를 다시 처음부터 시도
+            return true
+    return false                             // 모든 경우 실패
+
+ALGORITHM Search(pattern, text)
+    INPUT   pattern, text
+    OUTPUT  pattern이 처음 맞는 위치. 없으면 -1
+
+    for i <- 0 to |text| do                  // 정규식 .*pattern 과 같다
+        if Match(pattern, text[i..]) then
+            return i
+    return -1
+
+// 실패하면 바로 앞의 선택(c를 몇 개 먹을지)으로 되돌아가 다른 경우를 시도한다.
+// 이것이 백트래킹이다. 'x*'가 여럿 이어지면 시도할 경우의 수가 지수적으로 는다.

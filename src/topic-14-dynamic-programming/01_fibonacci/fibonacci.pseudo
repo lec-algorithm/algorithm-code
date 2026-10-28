@@ -1,0 +1,49 @@
+// 피보나치 수열 (주제 01과 같은 정의)
+//   F(0) = 0
+//   F(1) = 1
+//   F(n) = F(n-1) + F(n-2)    n > 1
+
+ALGORITHM FibRecursive(n)
+    if n <= 1 then
+        return n
+    return FibRecursive(n-1) + FibRecursive(n-2)
+
+// 주제 01의 재귀 그대로다. 같은 항을 몇 번이고 다시 구한다.
+//   F(5)를 구하는 동안 F(3)을 2번, F(2)를 3번 구한다. 호출은 15번
+//   시간 O(2^n) · 공간 O(n)
+
+
+ALGORITHM FibMemo(n, memo)
+    INPUT   n: 구하려는 항, memo[0..n]: 처음에는 전부 -1 (아직 모름)
+    OUTPUT  F(n)
+
+    if n <= 1 then
+        return n
+    if memo[n] != -1 then             // 이미 구한 값이면
+        return memo[n]                // 다시 갈라지지 않고 바로 돌려준다
+    memo[n] <- FibMemo(n-1, memo) + FibMemo(n-2, memo)
+    return memo[n]                    // 돌려주기 전에 적어 둔다
+
+// 메모이제이션 (하향식, top-down): 재귀는 그대로 두고 답을 적어 둔다.
+// F(n)부터 내려가며 필요한 것만 구한다 (lazy).
+// 각 항을 한 번씩만 계산하므로 호출은 2n-1번이다. F(5)면 9번
+//   시간 O(n) · 공간 O(n)   (memo 배열 + 호출 스택)
+
+
+ALGORITHM FibTabulation(n)
+    INPUT   n: 구하려는 항
+    OUTPUT  F(n)
+
+    if n <= 1 then
+        return n
+    dp[0] <- 0
+    dp[1] <- 1
+    for i <- 2 to n do
+        dp[i] <- dp[i-1] + dp[i-2]    // 앞의 두 칸은 이미 채워져 있다
+    return dp[n]
+
+// 타뷸레이션 (상향식, bottom-up): 작은 것부터 표를 빠짐없이 채운다 (eager).
+// 재귀가 없으니 스택이 넘칠 일이 없다.
+//   시간 O(n) · 공간 O(n)
+// dp[i]는 바로 앞 두 칸만 보므로 두 변수로 줄이면 공간 O(1)이 된다.
+// 그것이 주제 01의 반복(FibonacciIterative)이다.

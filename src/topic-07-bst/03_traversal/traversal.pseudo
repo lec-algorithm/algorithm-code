@@ -1,0 +1,31 @@
+ALGORITHM Inorder(node)                 // 중위: [왼쪽] [현재] [오른쪽]
+    if node != NULL then
+        Inorder(node.left)
+        node.key를 출력
+        Inorder(node.right)
+
+ALGORITHM Preorder(node)                // 전위: [현재] [왼쪽] [오른쪽]
+    if node != NULL then
+        node.key를 출력
+        Preorder(node.left)
+        Preorder(node.right)
+
+ALGORITHM Postorder(node)               // 후위: [왼쪽] [오른쪽] [현재]
+    if node != NULL then
+        Postorder(node.left)
+        Postorder(node.right)
+        node.key를 출력
+
+ALGORITHM LevelOrder(root)              // 레벨 순서: 위 레벨부터, 같은 레벨은 왼쪽부터
+    queue <- [root]
+    while queue가 비어 있지 않은 동안 do
+        node <- queue에서 맨 앞을 꺼낸다
+        node.key를 출력
+        if node.left != NULL then queue 뒤에 node.left를 넣는다
+        if node.right != NULL then queue 뒤에 node.right를 넣는다
+
+// 세 재귀 순회는 "현재 노드를 언제 출력하느냐"만 다르다.
+// 넷 다 노드마다 한 번씩 방문하므로 O(n)이다.
+// 재귀 순회는 호출 스택에 루트부터 현재까지의 길을 쌓으므로 추가 공간이 O(h),
+// 레벨 순서는 큐에 한 레벨이 통째로 들어갈 수 있어 최대 O(n)이다.
+// BST를 중위 순회하면 키가 오름차순으로 나온다.

@@ -1,0 +1,33 @@
+ALGORITHM ModularHash(k, M)
+    INPUT   k: 양의 정수 키,  M: 배열 크기
+    OUTPUT  0 이상 M-1 이하의 인덱스
+
+    return k mod M                      // 나머지는 언제나 [0, M-1] 안에 든다
+
+ALGORITHM SumHash(s, M)                 // 나쁜 예: 글자 순서를 보지 않는다
+    h <- 0
+    for 글자 c in s do
+        h <- (h + code(c)) mod M
+    return h
+
+ALGORITHM HornerHash(s, M)              // 좋은 예: 자리마다 R을 곱해 순서를 반영한다
+    INPUT   s: 문자열,  M: 배열 크기,  R: 작은 홀수 (여기서는 31)
+    h <- 0
+    for 글자 c in s do
+        h <- (R * h + code(c)) mod M    // 매번 나머지를 취해 h가 M보다 커지지 않는다
+    return h
+
+ALGORITHM CollisionChance(N, M)
+    INPUT   키 N개를 M칸에 고르게 무작위로 넣을 때
+    OUTPUT  적어도 한 번 충돌할 확률
+
+    none <- 1                           // 아직 한 번도 충돌하지 않을 확률
+    for i <- 0 to N-1 do
+        none <- none * (M - i) / M      // i개가 차지한 칸을 피해야 한다
+    return 1 - none
+
+// 좋은 해시 함수의 조건 셋: 결과가 [0, M-1] 안에 든다, 계산이 쉽다,
+// 키를 배열 전체에 고르게 퍼뜨린다.
+// M이 키들과 공약수를 가지면 일부 칸만 쓰인다. 그래서 M은 소수를 고른다.
+// N > M이면 충돌은 반드시 일어난다(비둘기집 원리). N이 M보다 훨씬 작아도
+// 충돌 확률은 생각보다 빨리 커진다(생일 문제).

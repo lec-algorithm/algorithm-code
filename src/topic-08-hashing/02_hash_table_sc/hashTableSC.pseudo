@@ -1,0 +1,35 @@
+ALGORITHM Hash(key, M)
+    return hashCode(key) mod M          // 키의 정수 코드를 M으로 나눈 나머지
+
+ALGORITHM Put(T, key, value)            // T: 크기 M인 배열, 칸마다 연결 리스트
+    INPUT   키와 값
+    OUTPUT  키가 이미 있으면 값을 바꾸고, 없으면 리스트 맨 앞에 붙인다
+
+    i <- Hash(key, M)
+    for 노드 x in T[i] do               // 1단계: 해시로 칸을 찾고
+        if x.key = key then             // 2단계: 그 칸의 리스트를 순차 탐색
+            x.value <- value            // 같은 키가 있으면 값만 바꾼다
+            return
+    T[i] <- 새 노드(key, value, next = T[i])   // 없으면 맨 앞에 붙인다
+    N <- N + 1
+
+ALGORITHM Get(T, key)
+    i <- Hash(key, M)
+    for 노드 x in T[i] do
+        if x.key = key then return x.value
+    return 없음                         // 리스트 끝까지 갔으면 없다
+
+ALGORITHM Delete(T, key)
+    i <- Hash(key, M)
+    prev <- 없음
+    for 노드 x in T[i] do
+        if x.key = key then
+            if prev = 없음 then T[i] <- x.next      // 맨 앞 노드
+            else prev.next <- x.next                // 중간이나 끝 노드
+            N <- N - 1
+            return 성공
+        prev <- x
+    return 실패
+
+// 해시 계산 O(1)에 리스트 한 줄 훑기. 해시가 고르면 리스트 길이의 평균은 N/M
+// 이므로 검색·삽입·삭제 모두 평균 O(1 + N/M), 최악(모두 한 칸)은 O(N)

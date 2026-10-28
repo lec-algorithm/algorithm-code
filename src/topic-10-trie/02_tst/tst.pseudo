@@ -1,0 +1,73 @@
+// TST (Ternary Search Tree) 노드 구조
+STRUCT TSTNode
+    data                                // 이 노드가 나타내는 문자
+    hasValue                            // 이 노드에서 끝나는 키가 있는가
+    value                               // 그 키의 값
+    left                                // data보다 작은 문자 (같은 자리)
+    middle                              // 다음 자리의 문자
+    right                               // data보다 큰 문자 (같은 자리)
+
+ALGORITHM CreateTSTNode(character)
+    node <- 새 TSTNode
+    node.data <- character
+    node.hasValue <- false
+    node.value <- 0
+    node.left <- NULL, node.middle <- NULL, node.right <- NULL
+    return node
+
+ALGORITHM Insert(root, word, value, index)
+    INPUT   root: 서브트리의 루트, word: 키, value: 값, index: 지금 보는 자리
+    OUTPUT  갱신된 서브트리의 루트
+    c <- word[index]
+    if root = NULL then
+        root <- CreateTSTNode(c)        // 아무것도 없으면 새 노드
+    if c < root.data then
+        root.left <- Insert(root.left, word, value, index)        // 작으면 왼쪽, 같은 자리
+    else if c > root.data then
+        root.right <- Insert(root.right, word, value, index)      // 크면 오른쪽, 같은 자리
+    else if index < length(word)-1 then
+        root.middle <- Insert(root.middle, word, value, index+1)  // 같으면 가운데, 다음 자리
+    else
+        root.hasValue <- true           // 키의 마지막 문자: 값을 둔다
+        root.value <- value
+    return root
+
+ALGORITHM GetNode(root, word)
+    OUTPUT  word의 마지막 문자에 해당하는 노드, 없으면 NULL
+    node <- root, index <- 0
+    while node != NULL do
+        c <- word[index]
+        if c < node.data then node <- node.left
+        else if c > node.data then node <- node.right
+        else if index = length(word)-1 then return node
+        else
+            node <- node.middle
+            index <- index + 1
+    return NULL
+
+ALGORITHM Search(root, word)
+    node <- GetNode(root, word)
+    if node != NULL and node.hasValue then return node.value
+    return -1
+
+ALGORITHM GetWordsWithPrefix(root, prefix)
+    results <- 빈 목록
+    prefixNode <- GetNode(root, prefix)           // 1. 접두사의 마지막 문자 노드
+    if prefixNode = NULL then return results
+    if prefixNode.hasValue then
+        results에 (prefix, prefixNode.value) 추가 // 접두사 자체가 키인 경우
+    GetAllWordsHelper(prefixNode.middle, prefix, results)   // 2. 가운데 아래만 모은다
+    return results
+
+ALGORITHM GetAllWordsHelper(node, prefix, results)
+    if node = NULL then return
+    GetAllWordsHelper(node.left, prefix, results)            // 같은 자리, 작은 문자
+    if node.hasValue then
+        results에 (prefix + node.data, node.value) 추가
+    GetAllWordsHelper(node.middle, prefix + node.data, results)   // 다음 자리
+    GetAllWordsHelper(node.right, prefix, results)           // 같은 자리, 큰 문자
+
+// 노드마다 링크는 3개뿐이다. 트라이의 노드 하나(링크 R개)가 TST에서는
+// 같은 자리의 문자들로 된 작은 이진 탐색 트리가 된다.
+// 왼쪽·오른쪽으로 갈 때는 index가 그대로이고, 가운데로 갈 때만 다음 문자로 넘어간다.
+// 왼쪽, 자기, 가운데, 오른쪽 순서로 돌면 키가 사전 순으로 나온다.

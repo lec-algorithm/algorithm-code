@@ -1,0 +1,30 @@
+ALGORITHM Search(root, key)
+    INPUT   root: 이진 탐색 트리의 루트, key: 찾는 값
+    OUTPUT  key를 가진 노드, 없으면 NULL
+
+    node <- root
+    while node != NULL do
+        if key = node.key then
+            return node                 // 찾았다
+        if key < node.key then
+            node <- node.left           // 작으면 왼쪽 서브트리만 보면 된다
+        else
+            node <- node.right          // 크면 오른쪽 서브트리만 보면 된다
+    return NULL                         // 비어 있는 자리에 닿았다: 없다
+
+ALGORITHM Insert(root, key)
+    INPUT   root: 이진 탐색 트리의 루트 (비어 있으면 NULL), key: 넣을 값
+    OUTPUT  key가 들어간 트리의 루트
+
+    if root = NULL then
+        return 새 노드(key)             // 검색이 실패한 바로 그 자리
+    if key < root.key then
+        root.left <- Insert(root.left, key)
+    else if key > root.key then
+        root.right <- Insert(root.right, key)
+    // 같으면 아무것도 하지 않는다 (키는 한 번만 넣는다)
+    return root
+
+// 삽입은 "실패한 검색 + 그 자리에 매달기"다. 둘 다 루트에서 잎 쪽으로 한
+// 길만 내려가므로 비용은 트리의 높이 h에 비례한다: O(h).
+// 균형이 잡혀 있으면 h = O(log n), 정렬된 순서로 넣어 한쪽으로 기울면 h = n.
