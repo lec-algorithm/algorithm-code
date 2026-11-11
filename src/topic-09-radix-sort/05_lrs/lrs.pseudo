@@ -3,7 +3,7 @@ ALGORITHM LongestRepeatedSubstring(T, n)
     OUTPUT  T에 두 번 이상 나오는 가장 긴 부분 문자열
 
     SA <- BuildSuffixArray(T, n)          // 03_suffix_array
-    LCP <- BuildLcpKasai(T, SA, n)        // 04_lcp
+    LCP <- BuildLcp(T, SA, n)             // 04_lcp
 
     // 반복되는 부분 문자열은 두 접미사의 공통 접두사다
     // 정렬하면 공통 접두사가 긴 접미사끼리 이웃하므로 이웃 쌍만 보면 된다

@@ -4,7 +4,7 @@ ALGORITHM LongestCommonSubstring(S1, S2)
 
     T <- S1 + "#" + S2 + "$"              // 하나로 이어 붙인다. n = |T|
     SA <- BuildSuffixArray(T, n)          // 03_suffix_array
-    LCP <- BuildLcpKasai(T, SA, n)        // 04_lcp
+    LCP <- BuildLcp(T, SA, n)             // 04_lcp
 
     // 접미사가 어느 문자열에서 시작했는지
     //   위치 < |S1|이면 1, '#'나 '$' 자리면 0, 나머지는 2

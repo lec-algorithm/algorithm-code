@@ -1,3 +1,17 @@
+ALGORITHM BuildLcpNaive(T, SA, n)
+    INPUT   T: 길이 n의 문자열('$'로 끝남), SA: T의 접미사 배열
+    OUTPUT  LCP: LCP[j]는 접미사 T[SA[j-1]..]와 T[SA[j]..]의 최장 공통 접두사 길이
+            LCP[0]은 앞 이웃이 없으므로 정의하지 않는다
+
+    for j <- 1 to n-1 do                  // 정렬에서 이웃한 두 접미사마다
+        a <- SA[j-1], b <- SA[j], h <- 0
+        while a + h < n and b + h < n and T[a + h] = T[b + h] do
+            h <- h + 1                    // 앞에서부터 같은 글자를 센다
+        LCP[j] <- h
+
+// 이웃 쌍마다 처음부터 비교한다. 공통 접두사가 길면 최악 O(n^2)
+// 아래 Kasai 알고리즘은 같은 배열을 O(n)에 만드는 참고용 방법이다
+
 ALGORITHM BuildLcpKasai(T, SA, n)
     INPUT   T: 길이 n의 문자열('$'로 끝남), SA: T의 접미사 배열
     OUTPUT  LCP: LCP[j]는 접미사 T[SA[j-1]..]와 T[SA[j]..]의 최장 공통 접두사 길이

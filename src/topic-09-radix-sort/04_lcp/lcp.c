@@ -1,7 +1,7 @@
-/* LCP 배열 (Kasai 알고리즘) — 정렬된 접미사 중 이웃한 둘의 최장 공통 접두사 길이.
+/* LCP 배열 — 정렬된 접미사 중 이웃한 둘의 최장 공통 접두사 길이.
  *
- * 텍스트 위치 순서로 접미사를 처리하면서, 앞 단계에서 센 길이 h를 하나만
- * 줄여 이어 쓴다. 이웃 쌍마다 처음부터 비교하는 방법과 글자 비교 횟수를 견준다.
+ * 이웃 쌍마다 처음부터 비교해 만든다. 참고로 Kasai 알고리즘(텍스트 위치 순서로 처리하며
+ * 앞 단계의 길이 h를 하나만 줄여 이어 쓴다)으로도 만들어 결과와 글자 비교 횟수를 견준다.
  *
  * 실행: 편집기 오른쪽 위 ▶ 버튼, 또는
  *   make src/topic-09-radix-sort/04_lcp/lcp.out
@@ -65,9 +65,10 @@ int buildLcpKasai(const char *text, const int sa[], int n, int lcp[]) {
     return compares;
 }
 
-/* 비교용: 이웃 쌍마다 처음부터 센다. 글자 비교 횟수를 돌려준다. */
-int countNaiveCompares(const char *text, const int sa[], int n) {
+/* 단순한 방법: 이웃 쌍마다 처음부터 비교한다. lcp[0]은 -1. 글자 비교 횟수를 돌려준다. */
+int buildLcpNaive(const char *text, const int sa[], int n, int lcp[]) {
     int compares = 0;
+    lcp[0] = -1;
     for (int j = 1; j < n; j++) {
         int a = sa[j - 1], b = sa[j], h = 0;
         while (a + h < n && b + h < n) {
@@ -77,6 +78,7 @@ int countNaiveCompares(const char *text, const int sa[], int n) {
             }
             h++;
         }
+        lcp[j] = h;
     }
     return compares;
 }
@@ -84,7 +86,7 @@ int countNaiveCompares(const char *text, const int sa[], int n) {
 int main(void) {
     const char *text = "banana$";
     int n = (int)strlen(text);
-    int sa[MAX_N], lcp[MAX_N];
+    int sa[MAX_N], lcp[MAX_N], kasaiLcp[MAX_N];
 
     buildSuffixArray(text, sa, n);
     printf("text = %s\n", text);
@@ -94,9 +96,7 @@ int main(void) {
     }
     printf("\n\n");
 
-    int kasai = buildLcpKasai(text, sa, n, lcp);
-    printf("\n");
-
+    int naive = buildLcpNaive(text, sa, n, lcp);
     printf("   j  SA[j]  LCP[j]  suffix\n");
     for (int j = 0; j < n; j++) {
         if (j == 0) {
@@ -105,6 +105,11 @@ int main(void) {
             printf("  %2d  %5d  %6d  %s\n", j, sa[j], lcp[j], text + sa[j]);
         }
     }
-    printf("char compares: kasai %d, naive %d\n", kasai, countNaiveCompares(text, sa, n));
+    printf("char compares = %d\n\n", naive);
+
+    printf("for reference: Kasai\n");
+    int kasai = buildLcpKasai(text, sa, n, kasaiLcp);
+    printf("same LCP = %s, char compares = %d\n",
+           memcmp(lcp + 1, kasaiLcp + 1, (size_t)(n - 1) * sizeof(int)) == 0 ? "yes" : "no", kasai);
     return 0;
 }
