@@ -1,7 +1,7 @@
-"""LCP 배열 (Kasai 알고리즘) — 정렬된 접미사 중 이웃한 둘의 최장 공통 접두사 길이.
+"""LCP 배열 — 정렬된 접미사 중 이웃한 둘의 최장 공통 접두사 길이.
 
-텍스트 위치 순서로 접미사를 처리하면서, 앞 단계에서 센 길이 h를 하나만
-줄여 이어 쓴다. 이웃 쌍마다 처음부터 비교하는 방법과 글자 비교 횟수를 견준다.
+이웃 쌍마다 처음부터 비교해 만든다. 참고로 Kasai 알고리즘(텍스트 위치 순서로 처리하며
+앞 단계의 길이 h를 하나만 줄여 이어 쓴다)으로도 만들어 결과와 글자 비교 횟수를 견준다.
 
 실행: 편집기 오른쪽 위 ▶ 버튼, 또는 `python3 lcp.py`
 """
@@ -47,9 +47,10 @@ def build_lcp_kasai(text, sa):
     return lcp, compares
 
 
-def count_naive_compares(text, sa):
-    """비교용: 이웃 쌍마다 처음부터 센다. 글자 비교 횟수를 돌려준다."""
+def build_lcp_naive(text, sa):
+    """단순한 방법: 이웃 쌍마다 처음부터 비교한다. lcp[0]은 -1. (lcp, 글자 비교 횟수)를 돌려준다."""
     n = len(text)
+    lcp = [-1] * n
     compares = 0
     for j in range(1, n):
         a, b, h = sa[j - 1], sa[j], 0
@@ -58,7 +59,8 @@ def count_naive_compares(text, sa):
             if text[a + h] != text[b + h]:
                 break
             h += 1
-    return compares
+        lcp[j] = h
+    return lcp, compares
 
 
 if __name__ == "__main__":
@@ -68,11 +70,14 @@ if __name__ == "__main__":
     print("SA   =", *sa)
     print()
 
-    lcp, kasai = build_lcp_kasai(text, sa)
-    print()
-
+    lcp, naive = build_lcp_naive(text, sa)
     print("   j  SA[j]  LCP[j]  suffix")
     for j, s in enumerate(sa):
         value = "-" if j == 0 else str(lcp[j])
         print(f"  {j:2d}  {s:5d}  {value:>6s}  {text[s:]}")
-    print(f"char compares: kasai {kasai}, naive {count_naive_compares(text, sa)}")
+    print(f"char compares = {naive}")
+    print()
+
+    print("for reference: Kasai")
+    kasai_lcp, kasai = build_lcp_kasai(text, sa)
+    print(f"same LCP = {'yes' if kasai_lcp[1:] == lcp[1:] else 'no'}, char compares = {kasai}")

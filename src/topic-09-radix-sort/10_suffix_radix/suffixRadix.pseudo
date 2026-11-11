@@ -1,0 +1,17 @@
+ALGORITHM BuildSuffixArrayRadix(T, n)
+    for i <- 0 to n-1 do
+        rank[i] <- T[i]                  // 처음 순위: 첫 글자의 문자 코드
+        SA[i] <- i
+    k <- 2
+    loop
+        // 짝 (rank[i], rank[i + k/2])은 두 자리 수다. LSD 기수 정렬 두 패스로 정렬한다
+        SA <- 시작 위치 순
+        SA를 뒷자리 rank[i + k/2]로 안정 카운팅 정렬한다     // 넘어가면 -1
+        SA를 앞자리 rank[i]로 안정 카운팅 정렬한다
+        정렬 순서대로 새 순위를 매긴다    // 짝이 같으면 같은 순위
+        if 순위가 모두 다르면 then break
+        k <- k * 2
+    return SA
+
+// 패스 하나는 O(n + 값의 범위)이고, 값의 범위는 n이나 문자 코드 수 정도다
+// 라운드는 많아야 log n번이므로 전체 O(n log n). qsort로 짝을 정렬하면 O(n log^2 n)이다

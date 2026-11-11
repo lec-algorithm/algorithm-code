@@ -1,0 +1,21 @@
+ALGORITHM MsdRecursive(A, lo, hi, exp)
+    if lo >= hi or exp = 0 then return
+    if hi - lo + 1 <= cutoff then         // 작은 구간은 삽입 정렬로 끝낸다
+        InsertionSort(A, lo, hi)
+        return
+
+    // 호출 하나의 비용: 구간의 원소를 읽고(자리 읽기), 카운팅 배열 k칸을 훑는다(칸 훑기)
+    CountingSortByDigit(A, lo, hi, exp, size)
+
+    start <- lo
+    for d <- 0 to k-1 do
+        if size[d] > 1 then           // 호출은 원소가 둘 이상인 구간마다 한 번
+            MsdRecursive(A, start, start + size[d] - 1, exp / k)
+        start <- start + size[d]
+
+// 세는 값
+//   LSD  자리 읽기 n x d, 호출 d, 칸 훑기 d x k
+//   MSD  자리 읽기 = 호출마다 구간 크기의 합, 칸 훑기 = 호출 수 x k
+//   합계 = 자리 읽기 + 칸 훑기 + 삽입 비교. 시간이 아니라 규모를 보는 값이다
+
+// 자리: 값을 기수 k로 쪼갠 것. 300은 k = 10이면 3, 0, 0이고 k = 256이면 1, 44다 (1 x 256 + 44)
