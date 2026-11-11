@@ -1,0 +1,13 @@
+ALGORITHM Measure(Sort, values)
+    spent <- 0, runs <- 0
+    repeat
+        work <- values의 복사본
+        t0 <- 지금 시각
+        Sort(work)
+        spent <- spent + (지금 시각 - t0), runs <- runs + 1
+        work가 정렬되었는지 확인한다
+    until spent >= 0.2초               // 짧게 끝나면 되풀이해 평균을 낸다
+    return spent / runs
+
+// 재는 정렬: LSD, MSD, 크기 16 이하를 삽입 정렬로 넘기는 MSD. 모두 R = 256
+// 절차는 01_lsd_radix_sort, 02_msd_radix_sort, 08_msd_cost와 같다
