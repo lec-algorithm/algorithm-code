@@ -1,0 +1,31 @@
+ALGORITHM Measure(Mst, G)
+    Mst(G)                              // 첫 번은 재지 않고 데운다
+    spent <- 0, runs <- 0
+    repeat
+        t0 <- 지금 시각
+        total <- Mst(G)                 // 최소 스패닝 트리의 총 가중치
+        spent <- spent + (지금 시각 - t0), runs <- runs + 1
+        네 방법의 total이 같은지 확인한다
+    until spent >= 0.2초               // 짧게 끝나면 되풀이해 평균을 낸다
+    return spent / runs
+
+// 재는 방법 넷. 그래프는 간선 목록(Kruskal)과 인접 목록(Prim)으로 미리 만들어 둔다
+//   Kruskal comp   정렬 + comp 배열 합치기(03_mst_kruskal)   O(E log E + V^2)
+//   Kruskal UF     정렬 + union-find(08_union_find)           O(E log E)
+//   Prim heap      최소 힙에 (key, 정점)을 넣고 꺼낸다(05_mst_prim)  O(E log E) = O(E log V)
+//   Prim array     힙 없이 key 배열 V칸을 훑어 가장 작은 것을 고른다  O(V^2 + E)
+
+ALGORITHM PrimArray(G)
+    for each 정점 v do key[v] <- INF, inTree[v] <- false
+    key[0] <- 0, total <- 0
+    repeat V번
+        u <- inTree가 아닌 정점 중 key가 가장 작은 것   // V칸을 훑는다
+        inTree[u] <- true, total <- total + key[u]
+        for each (u, v, w) in G.adj[u] do
+            if not inTree[v] and w < key[v] then key[v] <- w
+    return total
+
+// 그래프 두 종류
+//   희소: E = 4V. 정점 v(1 이상)를 앞의 정점 rand(v)에 이어 연결을 보장하고, 나머지는 무작위 두 정점
+//   밀집: 완전 그래프. 모든 쌍을 잇는다, E = V(V-1)/2
+// 가중치는 rand(1000000). 난수: x <- (1664525 x + 1013904223) mod 2^32, rand(k) = x mod k, 시드 2026
