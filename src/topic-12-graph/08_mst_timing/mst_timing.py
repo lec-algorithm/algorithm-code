@@ -1,14 +1,13 @@
-"""최소 스패닝 트리 시간 재기 — Kruskal 두 가지, Prim 두 가지를 희소 그래프와 완전 그래프에서.
+"""최소 스패닝 트리 시간 재기 — Kruskal과 Prim 두 가지를 희소 그래프와 완전 그래프에서.
 
-  Kruskal comp   정렬 + comp 배열 합치기(03_mst_kruskal)   O(E log E + V^2)
-  Kruskal UF     정렬 + union-find(08_union_find)           O(E log E)
+  Kruskal        정렬 + comp 배열 합치기(03_mst_kruskal)   O(E log E + V^2)
   Prim heap      최소 힙(05_mst_prim, heapq)                O(E log V)
   Prim array     key 배열 V칸을 훑어 고른다                 O(V^2 + E)
 
 그래프는 셋이다. 희소(E = 4V), 무작위 가중치 완전 그래프, 그리고 간선마다 key가
 줄어 힙에 가장 나쁜 완전 그래프. C보다 느리므로 크기를 줄였다.
 
-값은 밀리초다. 컴퓨터마다 다르므로 비율을 본다. 네 방법이 낸 총 가중치가
+값은 밀리초다. 컴퓨터마다 다르므로 비율을 본다. 세 방법이 낸 총 가중치가
 같은지 확인한다.
 
 실행: 편집기 오른쪽 위 ▶ 버튼, 또는 `python3 mst_timing.py`
@@ -61,7 +60,7 @@ def adjacency(n, edges):
     return adj
 
 
-def kruskal_comp(n, edges, adj):
+def kruskal(n, edges, adj):
     comp = list(range(n))
     total = k = 0
     for u, v, w in sorted(edges, key=lambda e: (e[2], e[0], e[1])):
@@ -74,34 +73,6 @@ def kruskal_comp(n, edges, adj):
         for x in range(n):  # 합치기: V칸을 다 훑는다
             if comp[x] == a or comp[x] == b:
                 comp[x] = small
-        if k == n - 1:
-            break
-    return total
-
-
-def kruskal_uf(n, edges, adj):
-    parent = list(range(n))
-    size = [1] * n
-
-    def find(x):
-        root = x
-        while parent[root] != root:
-            root = parent[root]
-        while parent[x] != root:
-            parent[x], x = root, parent[x]
-        return root
-
-    total = k = 0
-    for u, v, w in sorted(edges, key=lambda e: (e[2], e[0], e[1])):
-        a, b = find(u), find(v)
-        if a == b:
-            continue
-        total += w
-        k += 1
-        if size[a] < size[b]:
-            a, b = b, a
-        parent[b] = a
-        size[a] += size[b]
         if k == n - 1:
             break
     return total
@@ -165,11 +136,11 @@ def measure(mst, n, edges, adj, expected):
 def row(n, edges):
     adj = adjacency(n, edges)
     expected = [None]
-    ms = [measure(f, n, edges, adj, expected) for f in (kruskal_comp, kruskal_uf, prim_heap, prim_array)]
-    print(f"{n:7d} {len(edges):9d}  {ms[0]:12.3f}  {ms[1]:10.3f}  {ms[2]:9.3f}  {ms[3]:10.3f}")
+    ms = [measure(f, n, edges, adj, expected) for f in (kruskal, prim_heap, prim_array)]
+    print(f"{n:7d} {len(edges):9d}  {ms[0]:9.3f}  {ms[1]:9.3f}  {ms[2]:10.3f}")
 
 
-HEAD = f"{'V':>7} {'E':>9}  {'Kruskal comp':>12}  {'Kruskal UF':>10}  {'Prim heap':>9}  {'Prim array':>10}"
+HEAD = f"{'V':>7} {'E':>9}  {'Kruskal':>9}  {'Prim heap':>9}  {'Prim array':>10}"
 
 if __name__ == "__main__":
     rng = Rng(2026)
