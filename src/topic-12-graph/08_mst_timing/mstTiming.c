@@ -1,18 +1,17 @@
-/* 최소 스패닝 트리 시간 재기 — Kruskal 두 가지, Prim 두 가지를 희소 그래프와 완전 그래프에서.
+/* 최소 스패닝 트리 시간 재기 — Kruskal과 Prim 두 가지를 희소 그래프와 완전 그래프에서.
  *
- *   Kruskal comp   정렬 + comp 배열 합치기(03_mst_kruskal)   O(E log E + V^2)
- *   Kruskal UF     정렬 + union-find(08_union_find)           O(E log E)
+ *   Kruskal        정렬 + comp 배열 합치기(03_mst_kruskal)   O(E log E + V^2)
  *   Prim heap      최소 힙(05_mst_prim)                       O(E log V)
  *   Prim array     key 배열 V칸을 훑어 고른다                 O(V^2 + E)
  *
  * 그래프는 셋이다. 희소(E = 4V), 무작위 가중치 완전 그래프, 그리고 간선마다 key가
  * 줄어 힙에 가장 나쁜 완전 그래프.
  *
- * 값은 밀리초다. 컴퓨터마다 다르므로 비율을 본다. 네 방법이 낸 총 가중치가
+ * 값은 밀리초다. 컴퓨터마다 다르므로 비율을 본다. 세 방법이 낸 총 가중치가
  * 같은지 확인한다.
  *
  * 실행: 편집기 오른쪽 위 ▶ 버튼, 또는
- *   make src/topic-12-graph/09_mst_timing/mstTiming.out
+ *   make src/topic-12-graph/08_mst_timing/mstTiming.out
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,7 +38,7 @@ static int V, E;
 static Edge *edges, *work;
 static int *start; /* 정점 u의 이웃은 arcs[start[u]] .. arcs[start[u + 1] - 1] */
 static Arc *arcs;
-static int *parent, *size, *key;
+static int *comp, *key;
 static char *inTree;
 static Item *heap;
 
@@ -111,8 +110,7 @@ static void buildAdjacency(void) {
     }
     free(fill);
     work = malloc(sizeof(Edge) * (size_t)E);
-    parent = malloc(sizeof(int) * (size_t)V);
-    size = malloc(sizeof(int) * (size_t)V);
+    comp = malloc(sizeof(int) * (size_t)V);
     key = malloc(sizeof(int) * (size_t)V);
     inTree = malloc((size_t)V);
     heap = malloc(sizeof(Item) * (2 * (size_t)E + 1));
@@ -120,7 +118,7 @@ static void buildAdjacency(void) {
 
 static void freeGraph(void) {
     free(edges); free(work); free(start); free(arcs);
-    free(parent); free(size); free(key); free(inTree); free(heap);
+    free(comp); free(key); free(inTree); free(heap);
 }
 
 /* ---- Kruskal ---- */
@@ -131,8 +129,7 @@ static int byWeight(const void *a, const void *b) {
     return (x->v > y->v) - (x->v < y->v);
 }
 
-static long long kruskalComp(void) {
-    int *comp = parent;
+static long long kruskal(void) {
     memcpy(work, edges, sizeof(Edge) * (size_t)E);
     qsort(work, (size_t)E, sizeof(Edge), byWeight);
     for (int v = 0; v < V; v++) comp[v] = v;
@@ -147,42 +144,6 @@ static long long kruskalComp(void) {
         for (int x = 0; x < V; x++) { /* 합치기: V칸을 다 훑는다 */
             if (comp[x] == a || comp[x] == b) comp[x] = small;
         }
-    }
-    return total;
-}
-
-static int find(int x) {
-    int root = x;
-    while (parent[root] != root) root = parent[root];
-    while (parent[x] != root) {
-        int next = parent[x];
-        parent[x] = root;
-        x = next;
-    }
-    return root;
-}
-
-static long long kruskalUF(void) {
-    memcpy(work, edges, sizeof(Edge) * (size_t)E);
-    qsort(work, (size_t)E, sizeof(Edge), byWeight);
-    for (int v = 0; v < V; v++) {
-        parent[v] = v;
-        size[v] = 1;
-    }
-    long long total = 0;
-    int k = 0;
-    for (int i = 0; i < E && k < V - 1; i++) {
-        int a = find(work[i].u), b = find(work[i].v);
-        if (a == b) continue;
-        total += work[i].w;
-        k++;
-        if (size[a] < size[b]) {
-            int t = a;
-            a = b;
-            b = t;
-        }
-        parent[b] = a;
-        size[a] += size[b];
     }
     return total;
 }
@@ -283,29 +244,29 @@ static double measure(long long (*mst)(void)) {
 static void row(void) {
     buildAdjacency();
     expected = -1;
-    double a = measure(kruskalComp), b = measure(kruskalUF), c = measure(primHeap), d = measure(primArray);
-    printf("%7d %9d  %12.3f  %10.3f  %9.3f  %10.3f\n", V, E, a, b, c, d);
+    double a = measure(kruskal), b = measure(primHeap), c = measure(primArray);
+    printf("%7d %9d  %9.3f  %9.3f  %10.3f\n", V, E, a, b, c);
     freeGraph();
 }
 
 int main(void) {
     static const int sparse[] = {2000, 8000, 32000};
     static const int dense[] = {500, 1000, 2000};
-    const char *head = "%7s %9s  %12s  %10s  %9s  %10s\n";
+    const char *head = "%7s %9s  %9s  %9s  %10s\n";
     printf("sparse, E = 4V (ms)\n");
-    printf(head, "V", "E", "Kruskal comp", "Kruskal UF", "Prim heap", "Prim array");
+    printf(head, "V", "E", "Kruskal", "Prim heap", "Prim array");
     for (int i = 0; i < 3; i++) {
         makeSparse(sparse[i]);
         row();
     }
     printf("\ncomplete, E = V(V-1)/2 (ms)\n");
-    printf(head, "V", "E", "Kruskal comp", "Kruskal UF", "Prim heap", "Prim array");
+    printf(head, "V", "E", "Kruskal", "Prim heap", "Prim array");
     for (int i = 0; i < 3; i++) {
         makeComplete(dense[i]);
         row();
     }
     printf("\ncomplete, every edge lowers a key (ms)\n");
-    printf(head, "V", "E", "Kruskal comp", "Kruskal UF", "Prim heap", "Prim array");
+    printf(head, "V", "E", "Kruskal", "Prim heap", "Prim array");
     for (int i = 0; i < 3; i++) {
         makeWorstComplete(dense[i]);
         row();

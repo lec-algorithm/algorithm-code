@@ -1,12 +1,11 @@
-# 09. 최소 스패닝 트리 시간 재기
+# 08. 최소 스패닝 트리 시간 재기
 
-Kruskal 두 가지와 Prim 두 가지의 시간을 세 종류의 그래프에서 잰다. 값은 밀리초다.
-값은 컴퓨터마다 다르므로 비율을 본다. 네 방법이 낸 총 가중치가 같은지도 확인한다.
+Kruskal과 Prim 두 가지의 시간을 세 종류의 그래프에서 잰다. 값은 밀리초다.
+값은 컴퓨터마다 다르므로 비율을 본다. 세 방법이 낸 총 가중치가 같은지도 확인한다.
 
 | 방법 | 절차 | 시간 |
 | --- | --- | --- |
-| Kruskal comp | 정렬 + `comp` 배열 합치기 (`03_mst_kruskal`) | `O(E log E + V^2)` |
-| Kruskal UF | 정렬 + union-find (`08_union_find`) | `O(E log E)` |
+| Kruskal | 정렬 + `comp` 배열 합치기 (`03_mst_kruskal`) | `O(E log E + V^2)` |
 | Prim heap | 최소 힙 (`05_mst_prim`) | `O(E log V)` |
 | Prim array | 힙 없이 key 배열 V칸을 훑어 고른다 | `O(V^2 + E)` |
 
@@ -31,7 +30,7 @@ Kruskal 두 가지와 Prim 두 가지의 시간을 세 종류의 그래프에서
 - 실행
 
 ```sh
-cd src/topic-12-graph/09_mst_timing
+cd src/topic-12-graph/08_mst_timing
 make -f /work/Makefile mstTiming.out && ./mstTiming.out
 python3 mst_timing.py
 ```
@@ -40,39 +39,39 @@ python3 mst_timing.py
 
 ```console
 sparse, E = 4V (ms)
-      V         E  Kruskal comp  Kruskal UF  Prim heap  Prim array
-   2000      8000         2.968       0.435      0.142       2.287
-   8000     32000        34.831       2.106      0.955      35.513
-  32000    128000       517.287      10.024      5.184     555.430
+      V         E    Kruskal  Prim heap  Prim array
+   2000      8000      3.850      0.178       2.366
+   8000     32000     34.527      0.948      34.920
+  32000    128000    518.085      5.358     556.550
 
 complete, E = V(V-1)/2 (ms)
-      V         E  Kruskal comp  Kruskal UF  Prim heap  Prim array
-    500    124750         9.306       9.148      0.256       0.491
-   1000    499500        41.711      41.022      0.965       2.106
-   2000   1999000       183.393     180.328      3.413       9.270
+      V         E    Kruskal  Prim heap  Prim array
+    500    124750      9.046      0.253       0.486
+   1000    499500     40.496      0.998       2.090
+   2000   1999000    177.934      3.341       8.942
 
 complete, every edge lowers a key (ms)
-      V         E  Kruskal comp  Kruskal UF  Prim heap  Prim array
-    500    124750         2.984       3.002      5.445       0.233
-   1000    499500        13.145      13.253     25.066       0.833
-   2000   1999000        57.362      56.097    109.677       3.222
+      V         E    Kruskal  Prim heap  Prim array
+    500    124750      2.962      5.460       0.235
+   1000    499500     13.455     24.799       0.835
+   2000   1999000     55.808    108.868       3.301
 ```
 
 시간을 재는 예제라 두 구현의 출력 숫자는 같지 않다. 입력은 시드가 고정된 같은 값이다.
 
 ## 읽는 법
 
-- **희소 그래프**: V가 4배가 될 때 Kruskal comp와 Prim array는 15배쯤 는다. 둘 다
-  `V^2`에 묶이기 때문이다. Kruskal comp는 합치기마다 V칸을, Prim array는 정점마다
-  V칸을 훑는다. union-find와 힙으로 바꾼 두 방법은 V = 32,000에서 50배 이상 빠르다.
+- **희소 그래프**: V가 8,000에서 32,000으로 4배가 될 때 Kruskal과 Prim array는 15배쯤
+  는다. 둘 다 `V^2`에 묶이기 때문이다. Kruskal은 합치기마다 V칸을, Prim array는
+  정점마다 V칸을 훑는다. 힙을 쓰는 Prim heap은 V = 32,000에서 100배쯤 빠르다.
 - **무작위 완전 그래프**: Prim heap이 가장 빠르다. 가중치가 무작위면 이미 붙은 정점이
   남은 정점의 key를 줄이는 일이 드물어, 힙에 넣는 횟수가 E보다 훨씬 적다.
   Kruskal은 간선 E개를 모두 정렬해야 해서 가장 느리다.
 - **힙에 가장 나쁜 완전 그래프**: 간선마다 key가 줄어 힙에 E번 넣는다. 이제 Prim
   array가 V = 2,000에서 30배 넘게 빠르다. `O(V^2)`는 입력과 상관없이 지켜지는 상한이고, 완전
   그래프에서는 간선을 한 번씩 보는 비용과 같은 크기다.
-- 그래서 밀집 그래프에는 Prim array가 안전한 선택이다. 희소 그래프에는 Kruskal UF나
-  Prim heap을 쓴다. 간선이 이미 목록으로 주어지거나, 트리 대신 덩어리 여러 개(숲)가
+- 그래서 밀집 그래프에는 Prim array가 안전한 선택이다. 희소 그래프에는 Prim heap을
+  쓴다. 간선이 이미 목록으로 주어지거나, 트리 대신 덩어리 여러 개(숲)가
   필요하면 Kruskal이 자연스럽다.
 
 ## 바꿔 보기

@@ -5,6 +5,18 @@
 
 주제는 진도에 맞춰 추가된다. 새 주제가 올라오면 여기에 적는다.
 
+## [1.7.0] - 2026-11-18
+
+### Removed
+
+- **주제 12의 `08_union_find`**. 강의에서 union-find를 다루지 않기로 했다. `03_mst_kruskal`의
+  의사코드와 README, `07_a_star`의 README에서도 union-find 안내를 뺐다.
+
+### Changed
+
+- `09_mst_timing`이 `08_mst_timing`이 되었다. union-find로 하는 Kruskal 열을 빼서
+  Kruskal(comp 배열), Prim heap, Prim array 셋을 잰다. README의 출력도 새로 돌린 값이다.
+
 ## [1.6.0] - 2026-11-13
 
 ### Added
